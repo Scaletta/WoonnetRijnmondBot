@@ -73,10 +73,7 @@ jobs:
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Fetch Data from Woonnet Rijnmond
-        env:
-          USERNAME: ${{ secrets.WOONNET_USERNAME }}
-          PASSWORD: ${{ secrets.WOONNET_PASSWORD }}
-        run: ${{ steps.detect-package-manager.outputs.runner }} node fetchData.js --username="$USERNAME" --password="$PASSWORD"
+        run: ${{ steps.detect-package-manager.outputs.runner }} node fetchData.js --username=${{ secrets.WOONNET_USERNAME }} --password=${{ secrets.WOONNET_PASSWORD }}
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build 
       - name: Static HTML export with Next.js
