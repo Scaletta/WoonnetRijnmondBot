@@ -9,15 +9,27 @@ import {useKeenSlider} from 'keen-slider/react'
 import {Col, createTheme} from '@nextui-org/react';
 import { Grid, Container, Card, Row, Text, Button, Loading } from "@nextui-org/react";
 
+// Fetching data from the JSON file
+import fsPromises from 'fs/promises';
+import path from 'path'
+export async function getStaticProps() {
+    const filePath = path.join(process.cwd(), 'data/beschikbarewoningen.json');
+    const jsondata = await fsPromises.readFile(filePath);
+    const objectData = JSON.parse(jsondata);
+    return {
+        props: objectData
+    }
+}
+
 
 const darkTheme = createTheme({
     type: 'dark',
 });
 
 const { publicRuntimeConfig } = getConfig()
-const fetcher = (url) => fetch(url).then((res) => res.json());
 const animation = { duration: 20000, easing: (t) => t }
-export default function Home() {
+export default function Home(props) {
+    const data = props;
     const [sliderRef] = useKeenSlider({
         loop: true,
         centered: true,
@@ -36,7 +48,6 @@ export default function Home() {
             s.moveToIdx(s.track.details.abs + 5, true, animation)
         },
     })
-    const {data, error} = useSWR('/api/staticdata', fetcher);
     function Woningen() {
         return (
             data.d.sort((a, b) => a.reageerpositie - b.reageerpositie).map((item, index) => (
@@ -118,7 +129,7 @@ export default function Home() {
         );
     };
     //Handle the error state
-    if (error) return <Container><Loading size="xl">Loading</Loading></Container>;
+    //if (error) return <Container><Loading size="xl">Loading</Loading></Container>;
     //Handle the loading state
     if (!data) return <Container alignContent={"center"} justify={"center"}><Loading size="xl">Loading</Loading></Container>;
     return (
