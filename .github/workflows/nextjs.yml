@@ -77,6 +77,11 @@ jobs:
         env:
           USERNAME: ${{ secrets.WOONNET_USERNAME }}
           PASSWORD: ${{ secrets.WOONNET_PASSWORD }}
+      - name: Copy Woonnet Rijnmond Data
+        uses: canastro/copy-file-action@master
+        with:
+          source: "data/beschikbarewoningen.json"
+          target: "out/data/beschikbarewoningen.json"
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Static HTML export with Next.js
