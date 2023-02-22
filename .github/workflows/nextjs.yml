@@ -81,11 +81,10 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Static HTML export with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next export
+      - name: Create data directory
+        run: mkdir -p ./out/data/
       - name: Copy Woonnet Rijnmond Data
-        uses: canastro/copy-file-action@master
-        with:
-          source: "./data/beschikbarewoningen.json"
-          target: "./out/data/beschikbarewoningen.json"
+        run: cp ./data/beschikbarewoningen.json ./out/data/beschikbarewoningen.json
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
