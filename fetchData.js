@@ -9,8 +9,8 @@ let woonwens;
 let woonaanbod;
 let woonaanbodViaIDs;
 async function fetchCookies(){
-    const username = process.env.npm_config_username;
-    const password = process.env.npm_config_password;
+    const username = process.env.npm_config_username || process.env.USERNAME;
+    const password = process.env.npm_config_password || process.env.PASSWORD;
     if (typeof username === 'undefined' || typeof password === 'undefined') {
         console.error("Username or Password is not set!")
         return;
