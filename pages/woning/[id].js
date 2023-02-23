@@ -1,4 +1,3 @@
-import {useRouter} from 'next/router'
 import path from "path";
 import fsPromises from "fs/promises";
 import {Grid, Spacer, Text} from "@nextui-org/react";
@@ -22,19 +21,20 @@ export async function getStaticPaths() {
     return {paths, fallback: false}
 }
 
-export async function getStaticProps() {
+export async function getStaticProps({ params }) {
     const filePath = path.join(process.cwd(), 'data/data.json');
     const jsonData = await fsPromises.readFile(filePath);
     const woningen = JSON.parse(jsonData);
+    const woning = woningen.woningen.find((woning) => woning.id === params.id)
+    console.log(woning);
     return {
-        props: woningen
-    }
+        props: woning
+    };
 }
 
-const Woning = ({woningen}) => {
-    const router = useRouter()
-    const {id} = router.query
-    const woning = woningen.find((woning) => woning.id === id)
+const Woning = (woning) => {
+    const header = woning.plaats + ' - ' + woning.wijk;
+    const subheader = woning.straat + ' ' + woning.huisnummer + woning.huisletter + woning.huisnummertoevoeging;
     return (
         <DataContext.Provider value={woning}>
             <Layout text={'Available: ' + woning.publstart + ' - ' + woning.publstop}>
@@ -47,12 +47,12 @@ const Woning = ({woningen}) => {
                         h1
                         size={60}
                         css={{
-                            textGradient: "45deg, $blue600 -20%, $pink600 50%",
+                            textGradient: "45deg, $pink600 -20%, $blue600 50%",
                             textAlign: "center"
                         }}
                         weight="bold"
                     >
-                        Woonnet Rijnmond Bot
+                        {subheader} - {header}
                     </Text>
                     <Spacer y={1}/>
                     <Grid.Container gap={2} justify="center">

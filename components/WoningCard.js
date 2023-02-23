@@ -103,39 +103,39 @@ export default function WoningCard({index, data}) {
                 <Row>
                     <Col>
                         <Row>
-                            <Col span={5}>
+                            <Col span={10}>
                                 <Text>Reageerpositie:</Text>
                                 <Text weight={'extrabold'} color={positieColor}>{parseInt(data.reageerpositie)} &nbsp;</Text>
                             </Col>
-                            <Col span={5}>
+                            <Col span={6}>
                                 <Text>Aantal reacties:</Text>
                                 <Text weight={'bold'} color={reactiesColor}>{data.aantalreacties} &nbsp;</Text>
                             </Col>
-                        </Row>
-                    </Col>
-                    <Col>
-                        <Row justify="flex-end">
-                            <Link
-                                href={{
-                                    pathname: '/woning/[slug]',
-                                    query: { slug: data.id },
-                                }}>
-                                <Button
-                                    flat
-                                    auto
-                                    rounded
-                                    color="primary"
-                                >
-                                    <Text
-                                        css={{ color: "inherit" }}
-                                        size={12}
-                                        weight="bold"
-                                        transform="uppercase"
-                                    >
-                                        Bekijk dit krot
-                                    </Text>
-                                </Button>
-                            </Link>
+                            <Col>
+                                <Row justify="flex-end">
+                                    <Link
+                                        href={{
+                                            pathname: '/woning/[slug]',
+                                            query: { slug: data.id },
+                                        }}>
+                                        <Button
+                                            flat
+                                            auto
+                                            rounded
+                                            color="primary"
+                                        >
+                                            <Text
+                                                css={{ color: "inherit" }}
+                                                size={12}
+                                                weight="bold"
+                                                transform="uppercase"
+                                            >
+                                                Bekijk dit krot
+                                            </Text>
+                                        </Button>
+                                    </Link>
+                                </Row>
+                            </Col>
                         </Row>
                     </Col>
                 </Row>
