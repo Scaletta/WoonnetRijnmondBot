@@ -86,7 +86,7 @@ jobs:
       - name: Create data directory
         run: mkdir -p ./out/data/
       - name: Copy Woonnet Rijnmond Data
-        run: cp ./data/beschikbarewoningen.json ./out/data/beschikbarewoningen.json
+        run: cp ./data/data.json ./out/data/data.json
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
