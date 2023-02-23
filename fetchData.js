@@ -8,13 +8,30 @@ let inschrijfnummer;
 let woonwens;
 let woonaanbod;
 let woonaanbodViaIDs;
-async function fetchCookies(){
-    const username = process.env.npm_config_username || process.env.USERNAME;
-    const password = process.env.npm_config_password || process.env.PASSWORD;
-    if (typeof username === 'undefined' || typeof password === 'undefined') {
-        console.error("Username or Password is not set!")
-        return;
+let data = {
+    woningen: [],
+    refreshDate: Date.now()
+};
+
+const debug = process.env.npm_config_debug || process.env.DEBUG;
+const username = process.env.npm_config_username || process.env.USERNAME;
+const password = process.env.npm_config_password || process.env.PASSWORD;
+if (typeof username === 'undefined' || typeof password === 'undefined') {
+    console.error("Username or Password is not set!")
+    return;
+}
+
+async function writeToFile(name, data, folder = '/', force = false) {
+    if (debug || force) {
+        await fs.writeFile(__dirname + '/data' + folder + name + '.json', data).then(() => {
+            console.info("Written " + name + " to " + folder + name + ".json.");
+        }).catch((error) => {
+            console.error("Cant write " + name + " to " + folder + name + ".json. --- Error: " + error.toString());
+        });
     }
+}
+
+async function fetchCookies() {
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
     // Login
@@ -23,10 +40,9 @@ async function fetchCookies(){
     await page.type('#password', password);
     await page.click('.inloggen-btn');
     await page.waitForNavigation();
-    if(page.url() === "https://www.woonnetrijnmond.nl/mijn-account/"){
+    if (page.url() === "https://www.woonnetrijnmond.nl/mijn-account/") {
         console.debug("Login successful.");
-    }
-    else{
+    } else {
         console.error("Cant login on Woonnnet Rijnmond.");
         await browser.close()
         return;
@@ -34,37 +50,35 @@ async function fetchCookies(){
     // Get cookies
     const cookiesResponse = await page.cookies();
     const cookies = cookiesResponse.map(({name, value}) => ({name, value}));
-    const cookiesJson = JSON.stringify(cookies);
     const cookieStrings = cookies.map(({name, value}) => `${name}=${value}`);
     cookieNamesAndValues = cookieStrings.join('; ');
     // Write cookies
-    await fs.writeFile(__dirname + '/data/cookies.json', cookiesJson);
-    console.debug("Written cookies to data.json.");
-    await browser.close()
+    await writeToFile('cookies', JSON.stringify(cookies));
+    await browser.close();
     console.info("Fetched cookies from Woonnet Rijnmond!");
 }
-function getWoonwens(){
+
+function getWoonwens() {
     axios.default.request({
         'withCredentials': true,
         'url': 'https://www.woonnetrijnmond.nl/wsWoonnetRijnmond/Woonwensen/wsWoonwensen.asmx/GetWoonwens',
         'method': 'post',
         'headers': {
-                'Content-Type': "application/json; charset=utf-8",
-                'Cookie': cookieNamesAndValues.toString()
-            }
-        })
+            'Content-Type': "application/json; charset=utf-8",
+            'Cookie': cookieNamesAndValues.toString()
+        }
+    })
         .then(async response => {
             woonwens = response.data;
-            const woonwensJson = JSON.stringify(woonwens);
-            await fs.writeFile(__dirname + '/data/woonwens.json', woonwensJson).then(response => {
-                console.info("Written woonwens to woonwens.json.");
-            });
+            await writeToFile('woonwens', JSON.stringify(woonwens));
+            console.info("Fetched woonwens successfully.");
         })
-        .catch(async error =>{
-            console.error("Cant write woonwens to woonwens.json.")
+        .catch(async error => {
+            console.error("Cant fetch woonwens. --- Error: " + error.toString())
         })
 }
-function getWoonaanbod(){
+
+function getWoonaanbod() {
     axios.default.request({
         'withCredentials': true,
         'url': 'https://www.woonnetrijnmond.nl/wsWoonnetRijnmond/Woonwensen/wsWoonwensen.asmx/GetWoonwensResultatenVoorPaginaByInschrijfnummer',
@@ -81,18 +95,18 @@ function getWoonaanbod(){
     })
         .then(async response => {
             woonaanbod = response.data;
-            const woonaanbodJson = JSON.stringify(woonaanbod);
-            await fs.writeFile(__dirname + '/data/woonaanbod.json', woonaanbodJson).then(response => {
-                console.info("Written woonaanbod to woonaanbod.json.");
-                getWoonaanbodViaIDs();
-            });
+            console.info("Fetched woonaanbod successfully");
+            await writeToFile('woonaanbod', JSON.stringify(woonaanbod))
+            getWoonaanbodViaIDs();
         })
-        .catch(async error =>{
-            console.error("Cant write woonaanbod to woonaanbod.json. Error: " + error.toString())
+        .catch(async error => {
+            console.error("Cant fetch woonaanbod. --- Error: " + error.toString())
         })
 }
-function getWoonaanbodViaIDs(){
+
+function getWoonaanbodViaIDs() {
     let tussenposities = [];
+    let aanbodinformatie = [];
     inschrijfnummer = woonaanbod.d.resultaten[0].Inschrijfnummer;
     const frontendAdvertentieIds = woonaanbod.d.resultaten.map(obj => obj.FrontendAdvertentieId);
     axios.default.request({
@@ -105,45 +119,52 @@ function getWoonaanbodViaIDs(){
         },
         'data': {
             "Ids": frontendAdvertentieIds.join(";"),
-            "velden":"id;advertentienummer;complexid;straat;huisnummer;huisletter;huisnummertoevoeging;aanduiding;wijk;plaats;gebruik;objecttype;totaleoppervlakte;totaaloppervlaktemin;totaaloppervlaktemax;aantalslaapkamers;aantalslaapkamersmin;aantalslaapkamersmax;balkon;tuin;labels;eengezinswoning;flatmetlift;flatzonderlift;bovenwoning;maisonettewoning;benedenwoning;kalehuur;koopprijs;kalehuurmin;totalekoopprijsmin;passendheid;verdeelmodel;media;publstart;publstop;preview;criteriaurgentie;tijdelijkeverhuur;showrotterdamwet;middenhuur",
-            "inschrijfnummerTekst":inschrijfnummer,
-            "setKenmerkenIngelogd":false,
-            "addAantalReacties":true,
-            "Volgorde":"",
-            "inclusiefNieuwAanbod":false
+            "velden": "id;advertentienummer;complexid;straat;huisnummer;huisletter;huisnummertoevoeging;aanduiding;wijk;plaats;gebruik;objecttype;totaleoppervlakte;totaaloppervlaktemin;totaaloppervlaktemax;aantalslaapkamers;aantalslaapkamersmin;aantalslaapkamersmax;balkon;tuin;labels;eengezinswoning;flatmetlift;flatzonderlift;bovenwoning;maisonettewoning;benedenwoning;kalehuur;koopprijs;kalehuurmin;totalekoopprijsmin;passendheid;verdeelmodel;media;publstart;publstop;preview;criteriaurgentie;tijdelijkeverhuur;showrotterdamwet;middenhuur",
+            "inschrijfnummerTekst": inschrijfnummer,
+            "setKenmerkenIngelogd": true,
+            "addAantalReacties": true,
+            "Volgorde": "",
+            "inclusiefNieuwAanbod": true
         }
     })
         .then(async response => {
             woonaanbodViaIDs = response.data;
-            const woonaanbodViaIDsJson = JSON.stringify(woonaanbodViaIDs);
-            await fs.writeFile(__dirname + '/data/beschikbarewoningen.json', woonaanbodViaIDsJson).then(async () => {
-                console.info("Written beschikbarewoningen to beschikbarewoningen.json.");
-                for (const woning of woonaanbodViaIDs.d) {
-                    const advId = woning.advertentienummer;
-                    const positie = await GetTussenPositie(advId);
-                    const resultObject = {advId, positie};
-                    tussenposities.push(resultObject);
-                }
-                await fs.writeFile(__dirname + '/data/tussenposities.json', JSON.stringify(tussenposities));
-                console.info("Written tussenposities to tussenposities.json.");
-                tussenposities.forEach((tussenpositie) => {
-                    woonaanbodViaIDs.d.forEach((woning) => {
-                        if (tussenpositie.advId === woning.advertentienummer) {
-                            woning.reageerpositie = tussenpositie.positie;
-                        }
-                    });
+            await writeToFile('data', JSON.stringify(woonaanbodViaIDs));
+            console.info("Fetched woonaanbodViaIDs successfully.");
+            for (const woning of woonaanbodViaIDs.d) {
+                const advNummer = woning.advertentienummer;
+                const advId = woning.id;
+                const positie = await GetTussenPositie(advNummer);
+                const resultObject = {advNummer, positie};
+                tussenposities.push(resultObject);
+                const aanbodinformatieJson = await GetAanbodInformatie(advId);
+                aanbodinformatie.push(aanbodinformatieJson);
+            }
+            await writeToFile('tussenposities', JSON.stringify(tussenposities));
+            woonaanbodViaIDs.d.forEach((woning) => {
+                aanbodinformatie.forEach((aanbod) => {
+                    if (aanbod.Aanbod.advid === woning.advertentienummer) {
+                        woning.meerInformatie = aanbod.Aanbod;
+                    }
                 });
-                const woonaanbodViaIDsJson = JSON.stringify(woonaanbodViaIDs);
-                await fs.writeFile(__dirname + '/data/beschikbarewoningen.json', woonaanbodViaIDsJson).then(async () => {
-                    console.info("Written tussenposities to beschikbarewoningen.json.");
-                })
+                tussenposities.forEach((tussenpositie) => {
+                    if (tussenpositie.advNummer === woning.advertentienummer) {
+                        woning.meerInformatie.reageerpositie = tussenpositie.positie;
+                    }
+                });
+                data.woningen.push(woning.meerInformatie);
+            });
+            await writeToFile('data', JSON.stringify(data), '/', true).then(async () => {
+                console.info("Written tussenposities to data.json.");
+                console.info("Data from Woonnet Rijnmond is ready!")
             });
         })
-        .catch(async error =>{
-            console.error("Cant write beschikbarewoningen to beschikbarewoningen.json. Error: " + error.toString())
+        .catch(async error => {
+            console.error("Cant fetch beschikbarewoningen. --- Error: " + error.toString())
         })
 }
-function GetTussenPositie(advId){
+
+function GetTussenPositie(advId) {
     return new Promise((resolve, reject) => {
         axios.default.request({
             'withCredentials': true,
@@ -160,21 +181,55 @@ function GetTussenPositie(advId){
             }
         })
             .then(async response => {
-                let tussenpositie = response.data;
-                //await fs.writeFile(__dirname + '/data/tussenposities.json', tussenpositieJson);
-                console.info("Fetched tussenpositie for: " + advId + "=" + tussenpositie.d);
-                resolve(tussenpositie.d);
+                let tussenpositie = response.data.d;
+                await writeToFile('tussenposities', JSON.stringify(tussenpositie));
+                console.info("Fetched tussenpositie for: " + advId + "=" + tussenpositie);
+                resolve(tussenpositie);
             })
             .catch(async error => {
-                console.error("Cant write tussenposities to tussenposities.json. Error: " + error.toString())
+                console.error("Cant fetch tussenpositie. --- Error: " + error.toString())
                 reject(error)
             })
     });
 }
+
+function GetAanbodInformatie(advId) {
+    return new Promise((resolve, reject) => {
+        axios.default.request({
+            'withCredentials': true,
+            'url': 'https://www.woonnetrijnmond.nl/wsWoonnetRijnmond/WoningenModule/Service.asmx/getAanbodEnVolgendeViaId',
+            'method': 'post',
+            'headers': {
+                'Content-Type': "application/json; charset=utf-8",
+                'Cookie': cookieNamesAndValues.toString()
+            },
+            'data': {
+                "Id": advId,
+                "VolgendeId": "-1",
+                "Filters": "gebruik!=Complex",
+                "inschrijfnummerTekst": inschrijfnummer,
+                "Volgorde": "",
+                "hash": ""
+            }
+        })
+            .then(async response => {
+                let aanbodinformatie = response.data;
+                console.info("Fetched aanbodinformatie for: " + advId);
+                await writeToFile(advId, JSON.stringify(aanbodinformatie.d), '/huizen/');
+                resolve(aanbodinformatie.d);
+            })
+            .catch(async error => {
+                console.error("Cant check aanbodinformatie. Error: " + error.toString())
+                reject(error)
+            })
+    });
+}
+
 function start() {
     fetchCookies().then(() => {
         getWoonwens();
         getWoonaanbod();
     });
 }
+
 start();

@@ -3,7 +3,8 @@ module.exports = {
     publicRuntimeConfig: {
         maxHuur: 800,
         minHuur: 500,
-        minReageerPositie: 20,
+        minReageerPositie: 30,
+        include55plus: false
     },
     images: {
         remotePatterns: [
