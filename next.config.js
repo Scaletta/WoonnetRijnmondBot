@@ -1,5 +1,5 @@
 module.exports = {
-    basePath: process.env.BASE_PATH || process.env.NODE_ENV === 'production' ? '/WoonnetRijnmondBot/' : '',
+    basePath: process.env.BASE_PATH || process.env.NODE_ENV === 'production' ? '' : '',
     publicRuntimeConfig: {
         maxHuur: 800,
         minHuur: 500,

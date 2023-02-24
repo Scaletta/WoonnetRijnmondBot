@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import {MapContainer} from "react-leaflet";
 import {useRouter} from "next/router";
 import WoningCard from "./WoningCard";
-const OpenStreetMap = (data) => {
+const OpenStreetMap = ({woningen}) => {
     const router = useRouter()
     const icon = L.icon({
         iconUrl: router.basePath + "/images/marker-icon.png",
@@ -21,7 +21,7 @@ const OpenStreetMap = (data) => {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
             />
-            {data.data.woningen.map((location, index) => (
+            {woningen.woningen.map((location, index) => (
                 <Marker
                     iconShadow={icon}
                     icon={icon}
