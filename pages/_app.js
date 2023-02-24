@@ -1,4 +1,4 @@
-import { createTheme, NextUIProvider } from "@nextui-org/react"
+import {Container, createTheme, NextUIProvider} from "@nextui-org/react"
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 
 const lightTheme = createTheme({
@@ -23,7 +23,9 @@ function MyApp({ Component, pageProps }) {
             }}
         >
         <NextUIProvider>
+            <Container>
                 <Component {...pageProps} />
+            </Container>
         </NextUIProvider>
         </NextThemesProvider>
     );

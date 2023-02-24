@@ -68,7 +68,7 @@ export default function Home(props) {
                     Woonnet Rijnmond Bot
                 </Text>
                 <Spacer y={1} />
-                <Grid.Container gap={2} justify="center">
+                <Grid.Container gap={3} justify="center">
                     <Woningen></Woningen>
                 </Grid.Container>
             </Box>
