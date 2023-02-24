@@ -7,9 +7,9 @@ import {useRouter} from "next/router";
 const OpenStreetMap = (data) => {
     const router = useRouter()
     const icon = L.icon({
-        iconUrl: router.pathname + "/images/marker-icon.png",
-        iconRetinaUrl: router.pathname + "/images/marker-icon-2x.png",
-        shadowUrl: router.pathname + "/images/marker-shadow.png",
+        iconUrl: router.basePath + "/images/marker-icon.png",
+        iconRetinaUrl: router.basePath + "/images/marker-icon-2x.png",
+        shadowUrl: router.basePath + "/images/marker-shadow.png",
     });
     const [center, setCenter] = useState({lat: 51.9228, lng: 4.4891})
     const ZOOM_LEVEL = 12
