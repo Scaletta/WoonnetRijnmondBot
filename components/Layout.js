@@ -5,22 +5,23 @@ import React from "react";
 import {useRouter} from "next/router";
 
 export const Layout = ({children, text, searchbar}) => {
-    const router = useRouter();
+    const router = useRouter()
+    console.log(router);
     return (
         <>
             <Navbar isBordered variant="sticky" css={{zIndex: "500"}}>
                 <Navbar.Brand css={{mr: "$4"}}>
-                    <Link href="/">
+                    <Link href={router.basePath}>
                         <AcmeLogo/>
                         <Text b color="inherit" css={{mr: "$11"}} hideIn="xs">
                             Woonnet Rijnmond Bot
                         </Text>
                     </Link>
                     <Navbar.Content hideIn="xs" variant="highlight">
-                        <Navbar.Link isActive={router.pathname === "/"} href="/">
+                        <Navbar.Link isActive={router.pathname === "/"} href={router.basePath}>
                             Home
                         </Navbar.Link>
-                        <Navbar.Link isActive={router.pathname === "/map"} href="/map">Woningmap</Navbar.Link>
+                        <Navbar.Link isActive={router.pathname === "/map"} href={router.basePath + "/map"}>Woningmap</Navbar.Link>
                     </Navbar.Content>
                 </Navbar.Brand>
                 <Navbar.Content
