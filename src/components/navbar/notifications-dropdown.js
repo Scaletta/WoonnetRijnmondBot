@@ -1,14 +1,13 @@
 import {Dropdown, Navbar} from '@nextui-org/react';
 import React from 'react';
-/*import {NotificationIcon} from '../icons/navbar/notificationicon';*/
-import {HomeIcon} from "../icons/sidebar/home-icon";
+import {NotificationIcon} from '../icons/navbar/notificationicon';
 
 export const NotificationsDropdown = () => {
     return (
         <Dropdown placement="bottom-right">
             <Dropdown.Trigger>
                 <Navbar.Item>
-                    <HomeIcon />
+                    <NotificationIcon />
                 </Navbar.Item>
             </Dropdown.Trigger>
             <Dropdown.Menu

@@ -10,7 +10,11 @@ import {BurguerButton} from './burguer-button';
 import {NotificationsDropdown} from './notifications-dropdown';
 import {UserDropdown} from './user-dropdown';
 import {HomeIcon} from "../icons/sidebar/home-icon";
+import {DarkModeSwitch} from "./darkmodeswitch";
+import getConfig from "next/config";
 
+const { publicRuntimeConfig } = getConfig();
+const modifiedDate = new Date(publicRuntimeConfig.modifiedDate).toLocaleString();
 export const NavbarWrapper = ({children}) => {
     const collapseItems = [
         'Profile',
@@ -30,7 +34,7 @@ export const NavbarWrapper = ({children}) => {
                 position: 'relative',
                 display: 'flex',
                 flexDirection: 'column',
-                flex: '1 1 auto',
+                flex: '1  auto',
                 overflowY: 'auto',
                 overflowX: 'hidden',
             }}
@@ -60,9 +64,11 @@ export const NavbarWrapper = ({children}) => {
                     <BurguerButton />
                 </Navbar.Content>
                 <Navbar.Content
-                    hideIn={'md'}
+
                     css={{
                         width: '100%',
+                        paddingLeft: '25px',
+                        paddingRight: '25px',
                     }}
                 >
                     <Input
@@ -90,57 +96,17 @@ export const NavbarWrapper = ({children}) => {
                         placeholder="Search..."
                     />
                 </Navbar.Content>
-                <Navbar.Content>
-                    <Navbar.Content hideIn={'md'}>
+                <Navbar.Content css={{paddingRight: 25}}>
+                    <Navbar.Content hideIn="md">
                         <Flex align={'center'} css={{gap: '$4'}}>
-                            <HomeIcon />
-                            <Text span>Feedback?</Text>
+                            <Text span>Darkmodus</Text>
+                            <DarkModeSwitch />
                         </Flex>
                     </Navbar.Content>
-
                     <Navbar.Content>
-                        <NotificationsDropdown />
-                    </Navbar.Content>
-
-                    <Navbar.Content hideIn={'md'}>
-                        <HomeIcon />
-                    </Navbar.Content>
-                    <Navbar.Content>
-                        <Link
-                            href="https://github.com/Siumauricio/nextui-dashboard-template"
-                            target={'_blank'}
-                        >
-                            <HomeIcon />
-                        </Link>
-                    </Navbar.Content>
-                    <Navbar.Content>
-                        <UserDropdown />
+                        <Text align={'center'} span css={{width: 150}}>Updated: {modifiedDate}</Text>
                     </Navbar.Content>
                 </Navbar.Content>
-
-                <Navbar.Collapse>
-                    {collapseItems.map((item, index) => (
-                        <Navbar.CollapseItem
-                            key={item}
-                            activeColor="secondary"
-                            css={{
-                                color:
-                                    index === collapseItems.length - 1 ? '$error' : '',
-                            }}
-                            isActive={index === 2}
-                        >
-                            <Link
-                                color="inherit"
-                                css={{
-                                    minWidth: '100%',
-                                }}
-                                href="#"
-                            >
-                                {item}
-                            </Link>
-                        </Navbar.CollapseItem>
-                    ))}
-                </Navbar.Collapse>
             </Navbar>
             {children}
         </Box>

@@ -14,7 +14,7 @@ export const SidebarItem = ({icon, title, isActive, href = ''}) => {
     };
     return (
         <NextLink href={href}>
-            <Link
+            <Link as = "span"
                 css={{
                     color: '$accents9',
                     maxWidth: '100%',
