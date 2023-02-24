@@ -3,12 +3,13 @@ import L from 'leaflet';
 import {Marker, Popup, TileLayer} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import {MapContainer} from "react-leaflet";
-
+import {useRouter} from "next/router";
 const OpenStreetMap = (data) => {
+    const router = useRouter()
     const icon = L.icon({
-        iconUrl: "/images/marker-icon.png",
-        iconRetinaUrl: "/images/marker-icon-2x.png",
-        shadowUrl: "/images/marker-shadow.png",
+        iconUrl: router.pathname + "/images/marker-icon.png",
+        iconRetinaUrl: router.pathname + "/images/marker-icon-2x.png",
+        shadowUrl: router.pathname + "/images/marker-shadow.png",
     });
     const [center, setCenter] = useState({lat: 51.9228, lng: 4.4891})
     const ZOOM_LEVEL = 12
