@@ -4,6 +4,7 @@ import {Marker, Popup, TileLayer} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import {MapContainer} from "react-leaflet";
 import {useRouter} from "next/router";
+import WoningCard from "./WoningCard";
 const OpenStreetMap = (data) => {
     const router = useRouter()
     const icon = L.icon({
@@ -20,15 +21,17 @@ const OpenStreetMap = (data) => {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
             />
-            {data.data.woningen.map((location) => (
+            {data.data.woningen.map((location, index) => (
                 <Marker
                     iconShadow={icon}
                     icon={icon}
                     key={location.id}
                     position={[location.latitude, location.longitude]}
                 >
-                    <Popup>
-                        {location.id} <br/> Easily customizable.
+                    <Popup style={Style} className={Style}>
+                        <div style={Style}>
+                            <WoningCard index={index} data={location}></WoningCard>
+                        </div>
                     </Popup>
                 </Marker>
             ))}
@@ -36,4 +39,8 @@ const OpenStreetMap = (data) => {
     )
 }
 
+const Style = {
+    width: 500,
+    height: 450
+}
 export default OpenStreetMap
