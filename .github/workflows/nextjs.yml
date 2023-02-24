@@ -81,8 +81,12 @@ jobs:
           PASSWORD: ${{ secrets.WOONNET_PASSWORD }}
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
+        env:
+          BASE_PATH: ${{ steps.configure-pages.outputs.base_path }}
       - name: Static HTML export with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next export
+        env:
+          BASE_PATH: ${{ steps.configure-pages.outputs.base_path }}
       - name: Create data directory
         run: mkdir -p ./out/data/
       - name: Copy Woonnet Rijnmond Data

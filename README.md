@@ -32,9 +32,12 @@ Automaticly check your estimated place for houses based on your preferences ever
 ## Dependencies
 - [React](https://github.com/facebook/react)
 - [NextJS](https://github.com/vercel/next.js)
+- [Axios](https://axios-http.com/)
 - [Puppeteer](https://github.com/puppeteer/puppeteer)
 - [NextUI](https://github.com/nextui-org/nextui)
 - [Keen-Slider](https://github.com/rcbyr/keen-slider)
-
+- [React Leaflet](https://react-leaflet.js.org/)
+- [Leaflet](https://leafletjs.com/)
+- [React-PDF](https://react-pdf.org/)
 ## Disclaimer
 This repo is not affiliated in any way with Woonnet Rijnmond
