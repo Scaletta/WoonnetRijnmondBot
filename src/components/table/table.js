@@ -5,6 +5,7 @@ import {columns} from './data';
 import {RenderCell} from './render-cell';
 
 export const TableWrapper = ({data}) => {
+    const list = useAsyncList({ load, sort });
     const collator = useCollator({ numeric: true });
     async function load() {
         return {
@@ -24,7 +25,6 @@ export const TableWrapper = ({data}) => {
             }),
         };
     }
-    const list = useAsyncList({ load, sort });
     return (
         <Box
             css={{
@@ -34,7 +34,7 @@ export const TableWrapper = ({data}) => {
             }}
         >
             <Table
-                aria-label="Example table with custom cells"
+                aria-label="Woningen tabel"
                 css={{
                     height: 'auto',
                     minWidth: '100%',
@@ -42,7 +42,6 @@ export const TableWrapper = ({data}) => {
                     width: '100%',
                     px: 0,
                 }}
-                selectionMode="multiple"
                 sortDescriptor={list.sortDescriptor}
                 onSortChange={list.sort}
             >
@@ -73,7 +72,7 @@ export const TableWrapper = ({data}) => {
                     shadow
                     noMargin
                     align="center"
-                    rowsPerPage={15}
+                    rowsPerPage={10}
                     onPageChange={(page) => console.log({page})}
                 />
             </Table>

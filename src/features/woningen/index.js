@@ -5,8 +5,6 @@ import {TableWrapper} from '../../components/table/table';
 
 export const Woningen = ({woningen}) => {
     const [searchQuery, setSearchQuery] = useState('');
-    const [data, setData] = useState([]);
-
     function handleSearchInputChange(event) {
         setSearchQuery(event.target.value);
     }
@@ -63,6 +61,7 @@ export const Woningen = ({woningen}) => {
                     align={'center'}
                 >
                     <Input
+                        aria-label="Zoek woningen"
                         css={{width: '100%', maxW: '410px'}}
                         placeholder="Zoek woningen"
                         value={searchQuery} onChange={handleSearchInputChange}

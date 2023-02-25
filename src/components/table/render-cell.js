@@ -4,6 +4,7 @@ import {EyeIcon} from '../icons/table/eye-icon';
 import {IconButton, StyledBadge} from './table.styled';
 import getConfig from "next/config";
 import Link from "next/link";
+import {WoningSlider} from "../woning/WoningSlider";
 
 const {publicRuntimeConfig} = getConfig();
 export const RenderCell = ({woning, columnKey}) => {
@@ -14,12 +15,12 @@ export const RenderCell = ({woning, columnKey}) => {
             return (
                 <Popover>
                     <Popover.Trigger>
-                        <User pointer={true} squared src={'https:' + woning.media[0].mobile} name={cellValue + ' ' + woning.huisnummer}  css={{p: 0}}>
+                        <User squared src={'https:' + woning.media[0].mobile} name={cellValue + ' ' + woning.huisnummer}  css={{p: 0}}>
                             {woning.plaats} - {woning.wijk}
                         </User>
                     </Popover.Trigger>
                     <Popover.Content>
-                        <Text css={{ p: "$10" }}>This is the content of the popover.</Text>
+                        <WoningSlider woning={woning}></WoningSlider>
                     </Popover.Content>
                 </Popover>
             );

@@ -1,6 +1,5 @@
-import {Input, Navbar, Text} from '@nextui-org/react';
+import {Navbar, Text} from '@nextui-org/react';
 import React from 'react';
-import {SearchIcon} from '../icons/searchicon';
 import {Box} from '../styles/box';
 import {Flex} from '../styles/flex';
 import {BurguerButton} from './burguer-button';
@@ -12,18 +11,6 @@ import {CgDarkMode} from "react-icons/cg";
 const { publicRuntimeConfig } = getConfig();
 const modifiedDate = new Date(publicRuntimeConfig.modifiedDate).toLocaleString();
 export const NavbarWrapper = ({children}) => {
-    const collapseItems = [
-        'Profile',
-        'Dashboard',
-        'Activity',
-        'Analytics',
-        'System',
-        'Deployments',
-        'My Settings',
-        'Team Settings',
-        'Help & Feedback',
-        'Log Out',
-    ];
     return (
         <Box
             css={{
@@ -67,7 +54,7 @@ export const NavbarWrapper = ({children}) => {
                         paddingRight: '25px',
                     }}
                 >
-                    <Input
+{/*                    <Input
                         clearable
                         contentLeft={
                             <SearchIcon
@@ -90,7 +77,7 @@ export const NavbarWrapper = ({children}) => {
                             },
                         }}
                         placeholder="Search..."
-                    />
+                    />*/}
                 </Navbar.Content>
                 <Navbar.Content css={{paddingRight: 25}}>
                     <Navbar.Content hideIn="md">
