@@ -7,8 +7,8 @@ import {Box} from "../../components/styles/box";
 import {Flex} from "../../components/styles/flex";
 import {LatestWoning} from "./components/LatestWoning";
 import dynamic from "next/dynamic";
-import {CardAgents} from "./components/card-agents";
-import {CardTransactions} from "./components/card-transactions";
+import {Counter} from "./components/Counter";
+
 
 const {publicRuntimeConfig} = getConfig()
 const Chart = dynamic(
@@ -20,9 +20,13 @@ const Chart = dynamic(
 export default function Home(props) {
     const [latestWoningen, setLatestWoningen] = useState([]);
     const [woningPrijzen, setWoningPrijzen] = useState([]);
+    const [gemiddeldeReageerpositie, setGemiddeldeReageerpositie] = useState(0);
+    const [gemiddeldeHuur, setGemiddeldeHuur] = useState(0);
     useEffect(() => {
         setLatestWoningen(getLatestWoningen());
         setWoningPrijzen(getWoningPrijzen());
+        setGemiddeldeReageerpositie(getGemiddeldeReageerpositie());
+        setGemiddeldeHuur(getGemiddeldeHuur());
     }, [props])
 
     function Woningen() {
@@ -61,8 +65,23 @@ export default function Home(props) {
                 publstart: new Date(woning.publstart),
             }))
             .sort((a, b) => b.publstart - a.publstart)
-            .slice(0, 3);
     }
+    function getGemiddeldeReageerpositie(){
+        const reageerpositieArray = props.woningen.woningen.map((woning) => Number(woning.reageerpositie));
+        const totalReageerpositie = reageerpositieArray.reduce((total, currentValue) => total + currentValue, 0);
+        return parseInt(totalReageerpositie / reageerpositieArray.length);
+    }
+
+    function getGemiddeldeHuur(){
+        const reageerpositieArray = props.woningen.woningen.map((woning) => {
+            const datapoint = !isNaN(parseInt(woning.kalehuur)) ? parseInt(woning.kalehuur) : parseInt(woning.totalehuurmin);
+            return Number(datapoint);
+        });
+        const totalReageerpositie = reageerpositieArray.reduce((total, currentValue) => total + currentValue, 0);
+        console.log(totalReageerpositie / reageerpositieArray.length);
+        return parseInt(totalReageerpositie / reageerpositieArray.length);
+    }
+
 
     //Handle the error state
     if (!props) return <Container><Loading size="xl">Loading</Loading></Container>;
@@ -136,7 +155,7 @@ export default function Home(props) {
                                 },
                             }}
                         >
-                            Statistics
+                            Huurprijzen met reageerpositie
                         </Text>
                         <Box
                             css={{
@@ -148,7 +167,7 @@ export default function Home(props) {
                                 py: '$10',
                             }}
                         >
-                            <Chart woningen={props.woningen} />
+                            <Chart woningen={woningPrijzen} />
                         </Box>
                     </Box>
                 </Flex>
@@ -158,7 +177,6 @@ export default function Home(props) {
                     css={{
                         'px': '$12',
                         'mt': '$8',
-                        'height': 'fit-content',
                         '@xsMax': {px: '$10'},
                         'gap': '$6',
                         'overflow': 'hidden',
@@ -173,13 +191,14 @@ export default function Home(props) {
                             },
                         }}
                     >
-                        Section
+                        Gemiddelde reageerpositie
                     </Text>
                     <Flex
                         direction={'column'}
                         justify={'center'}
                         css={{
                             'gap': '$8',
+                            'mt': '$8',
                             'flexDirection': 'row',
                             'flexWrap': 'wrap',
                             '@sm': {
@@ -191,8 +210,37 @@ export default function Home(props) {
                             },
                         }}
                     >
-                        <CardAgents />
-                        <CardTransactions />
+                        <Counter value={gemiddeldeReageerpositie} type={'reageerpositie'} />
+                    </Flex>
+                    <Flex
+                        direction={'column'}
+                        justify={'center'}
+                        css={{
+                            'gap': '$8',
+                            'mt': '$8',
+                            'flexDirection': 'row',
+                            'flexWrap': 'wrap',
+                            '@sm': {
+                                flexWrap: 'nowrap',
+                            },
+                            '@lg': {
+                                flexWrap: 'nowrap',
+                                flexDirection: 'column',
+                            },
+                        }}
+                    >
+                        <Text
+                            h3
+                            css={{
+                                'textAlign': 'center',
+                                '@lg': {
+                                    textAlign: 'inherit',
+                                },
+                            }}
+                        >
+                            Gemiddelde huurprijs
+                        </Text>
+                        <Counter value={gemiddeldeHuur} type={'huur'} />
                     </Flex>
                 </Box>
             </Flex>
@@ -219,7 +267,7 @@ export default function Home(props) {
                             },
                         }}
                     >
-                        Latest Users
+                        {/*Latest Users*/}
                     </Text>
 
                 </Flex>

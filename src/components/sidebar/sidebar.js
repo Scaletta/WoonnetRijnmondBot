@@ -1,12 +1,11 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Box} from '../styles/box';
 import {Sidebar} from './sidebar.styles';
-import {Avatar, Tooltip} from '@nextui-org/react';
+import {Tooltip} from '@nextui-org/react';
 import {Flex} from '../styles/flex';
 import {CompaniesDropdown} from './companies-dropdown';
 import {HomeIcon} from '../icons/sidebar/home-icon';
 import { FaHome, FaMapMarkedAlt, FaBug } from "react-icons/fa";
-import {CollapseItems} from './collapse-items';
 import {SidebarItem} from './sidebar-item';
 import {SidebarMenu} from './sidebar-menu';
 import {FaGithub} from 'react-icons/fa';
@@ -51,7 +50,7 @@ export const SidebarWrapper = () => {
                                 isActive={router.pathname === '/woningen'}
                                 title="Woninglijst"
                                 icon={<FaHome/>}
-                                href="/"
+                                href="#"
                             />
                             <SidebarItem
                                 isActive={router.pathname === '/map'}
@@ -68,10 +67,10 @@ export const SidebarWrapper = () => {
 
                         <SidebarMenu title="Debug">
                             <SidebarItem
-                                isActive={router.pathname === '/map'}
+                                isActive={router.pathname === '/debug'}
                                 title="Debug"
                                 icon={<FaBug/>}
-                                href="/map"
+                                href="#"
                             />
                         </SidebarMenu>
                     </Sidebar.Body>
