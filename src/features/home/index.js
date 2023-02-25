@@ -8,6 +8,7 @@ import {Flex} from "../../components/styles/flex";
 import {LatestWoning} from "./components/LatestWoning";
 import dynamic from "next/dynamic";
 import {Counter} from "./components/Counter";
+import Head from "next/head";
 
 
 const {publicRuntimeConfig} = getConfig()
@@ -82,7 +83,6 @@ export default function Home(props) {
         return parseInt(totalReageerpositie / reageerpositieArray.length);
     }
 
-
     //Handle the error state
     if (!props) return <Container><Loading size="xl">Loading</Loading></Container>;
     //Handle the loading state
@@ -90,6 +90,33 @@ export default function Home(props) {
         size="xl">Loading</Loading></Container>;
     return (
         <Box css={{overflow: 'hidden', height: '100%'}}>
+            <Head>
+                <title>Woonnet Rijnmond Bot - Home</title>
+                <link rel="icon" href="/favicon.ico"/>
+            </Head>
+            <Flex
+                css={{
+                    'mt': '$5',
+                    'px': '$6',
+                    '@sm': {
+                        mt: '$10',
+                        px: '$16',
+                    },
+                }}
+                justify={'center'}
+                direction={'column'}
+            >
+                <Text
+                    h1
+                    css={{
+                        textGradient: "45deg, $pink600 -20%, $blue600 50%",
+                        'mb': '$8',
+                    }}
+                    weight="bold"
+                >
+                    Woonnet Rijnmond Bot
+                </Text>
+            </Flex>
             <Flex
                 css={{
                     'gap': '$8',

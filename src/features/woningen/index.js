@@ -2,6 +2,7 @@ import {Button, Input, Text} from '@nextui-org/react';
 import React, {useState} from 'react';
 import {Flex} from '../../components/styles/flex';
 import {TableWrapper} from '../../components/table/table';
+import Head from "next/head";
 
 export const Woningen = ({woningen}) => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -44,8 +45,20 @@ export const Woningen = ({woningen}) => {
             justify={'center'}
             direction={'column'}
         >
-
-            <Text h3>Woningen</Text>
+            <Head>
+                <title>Woonnet Rijnmond Bot - Woningen</title>
+                <link rel="icon" href="/favicon.ico"/>
+            </Head>
+            <Text
+                h1
+                css={{
+                    textGradient: "45deg, $pink600 -20%, $blue600 50%",
+                    'mb': '$8',
+                }}
+                weight="bold"
+            >
+                Woningmap
+            </Text>
             <Flex
                 css={{gap: '$8'}}
                 align={'center'}
