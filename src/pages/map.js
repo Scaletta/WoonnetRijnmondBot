@@ -1,4 +1,4 @@
-import Map from '../features/map/Map';
+import Map from '../features/map';
 import {loadData} from "../lib/load-data";
 
 export async function getStaticProps() {
