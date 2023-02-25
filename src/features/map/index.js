@@ -8,7 +8,7 @@ const OpenStreetMap = dynamic(() => import('./components/OpenStreetMap'), {
     ssr: false,
 })
 
-export default function Home({woningen}) {
+export default function Map({woningen}) {
     return (
         <Box css={{overflow: 'hidden', height: '100%'}}>
                     <Head>
