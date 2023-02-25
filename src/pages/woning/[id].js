@@ -1,10 +1,8 @@
 import path from "path";
 import fsPromises from "fs/promises";
 import {Grid, Spacer, Text} from "@nextui-org/react";
-import {Layout} from "../../components/Layout";
-import {Box} from "../../components/Box";
 import Head from "next/head";
-import {DataContext} from "../index";
+import {Box} from "../../components/styles/box";
 
 export async function getStaticPaths() {
     const filePath = path.join(process.cwd(), 'data/data.json');
@@ -21,7 +19,7 @@ export async function getStaticPaths() {
     return {paths, fallback: false}
 }
 
-export async function getStaticProps({ params }) {
+export async function getStaticProps({params}) {
     const filePath = path.join(process.cwd(), 'data/data.json');
     const jsonData = await fsPromises.readFile(filePath);
     const woningen = JSON.parse(jsonData);
@@ -36,31 +34,27 @@ const Woning = (woning) => {
     const header = woning.plaats + ' - ' + woning.wijk;
     const subheader = woning.straat + ' ' + woning.huisnummer + woning.huisletter + woning.huisnummertoevoeging;
     return (
-        <DataContext.Provider value={woning}>
-            <Layout text={'Available: ' + woning.publstart + ' - ' + woning.publstop}>
-                <Box css={{px: "$12", mt: "$8", "@xsMax": {px: "$10"}}}>
-                    <Head>
-                        <title>Woonnet Rijnmond Bot - {woning.id}</title>
-                        <link rel="icon" href="/favicon.ico"/>
-                    </Head>
-                    <Text
-                        h1
-                        size={60}
-                        css={{
-                            textGradient: "45deg, $pink600 -20%, $blue600 50%",
-                            textAlign: "center"
-                        }}
-                        weight="bold"
-                    >
-                        {subheader} - {header}
-                    </Text>
-                    <Spacer y={1}/>
-                    <Grid.Container gap={2} justify="center">
+        <Box css={{overflow: 'hidden', height: '100%'}}>
+            <Head>
+                <title>Woonnet Rijnmond Bot - {woning.id}</title>
+                <link rel="icon" href="/favicon.ico"/>
+            </Head>
+            <Text
+                h1
+                size={60}
+                css={{
+                    textGradient: "45deg, $pink600 -20%, $blue600 50%",
+                    textAlign: "center"
+                }}
+                weight="bold"
+            >
+                {subheader} - {header}
+            </Text>
+            <Spacer y={1}/>
+            <Grid.Container gap={2} justify="center">
 
-                    </Grid.Container>
-                </Box>
-            </Layout>
-        </DataContext.Provider>
+            </Grid.Container>
+        </Box>
     )
 }
 

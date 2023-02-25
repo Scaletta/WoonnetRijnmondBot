@@ -1,30 +1,16 @@
-import path from "path";
-import fsPromises from "fs/promises";
 import {Card, Spacer, Text} from "@nextui-org/react";
-import {Layout} from "../components/Layout";
-import {Box} from "../components/Box";
 import Head from "next/head";
-import {DataContext} from "./index";
 import 'leaflet/dist/leaflet.css'
 import dynamic from "next/dynamic";
+import {Box} from "../../components/styles/box";
 
-export async function getStaticProps() {
-    const filePath = path.join(process.cwd(), 'data/data.json');
-    const jsonData = await fsPromises.readFile(filePath);
-    const woningen = JSON.parse(jsonData);
-    return {
-        props: woningen
-    }
-}
-const OpenStreetMap = dynamic(() => import('../components/OpenStreetMap'), {
+const OpenStreetMap = dynamic(() => import('./components/OpenStreetMap'), {
     ssr: false,
 })
 
-const Map = (woningen) => {
+export default function Home({woningen}) {
     return (
-        <DataContext.Provider value={woningen}>
-            <Layout text="">
-                <Box css={{px: "$12", mt: "$8", "@xsMax": {px: "$10"}}}>
+        <Box css={{overflow: 'hidden', height: '100%'}}>
                     <Head>
                         <title>Woonnet Rijnmond Bot - Map</title>
                         <link rel="icon" href="/favicon.ico"/>
@@ -42,12 +28,8 @@ const Map = (woningen) => {
                     </Text>
                     <Spacer y={1}/>
                     <Card>
-                    <OpenStreetMap data={woningen}/>
+                    <OpenStreetMap woningen={woningen}/>
                     </Card>
                 </Box>
-            </Layout>
-        </DataContext.Provider>
     )
 }
-
-export default Map
