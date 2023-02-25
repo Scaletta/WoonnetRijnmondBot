@@ -1,17 +1,13 @@
-import {Input, Link, Navbar, Text} from '@nextui-org/react';
+import {Input, Navbar, Text} from '@nextui-org/react';
 import React from 'react';
-/*import {FeedbackIcon} from '../icons/navbar/feedback-icon';
-import {GithubIcon} from '../icons/navbar/github-icon';
-import {SupportIcon} from '../icons/navbar/support-icon';*/
 import {SearchIcon} from '../icons/searchicon';
 import {Box} from '../styles/box';
 import {Flex} from '../styles/flex';
 import {BurguerButton} from './burguer-button';
-import {NotificationsDropdown} from './notifications-dropdown';
-import {UserDropdown} from './user-dropdown';
-import {HomeIcon} from "../icons/sidebar/home-icon";
+import { MdUpdate } from "react-icons/md";
 import {DarkModeSwitch} from "./darkmodeswitch";
 import getConfig from "next/config";
+import {CgDarkMode} from "react-icons/cg";
 
 const { publicRuntimeConfig } = getConfig();
 const modifiedDate = new Date(publicRuntimeConfig.modifiedDate).toLocaleString();
@@ -99,12 +95,14 @@ export const NavbarWrapper = ({children}) => {
                 <Navbar.Content css={{paddingRight: 25}}>
                     <Navbar.Content hideIn="md">
                         <Flex align={'center'} css={{gap: '$4'}}>
-                            <Text span>Darkmodus</Text>
+                            <Text align={'center'} css={{paddingTop: 3}} span><CgDarkMode size={24}/></Text>
                             <DarkModeSwitch />
                         </Flex>
                     </Navbar.Content>
                     <Navbar.Content>
-                        <Text align={'center'} span css={{width: 150}}>Updated: {modifiedDate}</Text>
+
+                        <Text align={'right'} css={{paddingTop: 3}} span><MdUpdate size={24}/></Text>
+                        <Text align={'center'} css={{marginLeft: -20}} span> {modifiedDate}</Text>
                     </Navbar.Content>
                 </Navbar.Content>
             </Navbar>

@@ -48,9 +48,9 @@ export const SidebarWrapper = () => {
                         <SidebarMenu title="Woningen">
                             <SidebarItem
                                 isActive={router.pathname === '/woningen'}
-                                title="Woninglijst"
+                                title="Woningen"
                                 icon={<FaHome/>}
-                                href="#"
+                                href="/woningen"
                             />
                             <SidebarItem
                                 isActive={router.pathname === '/map'}

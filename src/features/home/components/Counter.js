@@ -21,27 +21,27 @@ export const Counter = ({value, type}) => {
             <Loading size="md"></Loading>
         </Card>
     );
-    let color = "black"
+    let color = "45deg, $pink600 -20%, $blue600 50%"
     let data = value;
     if(type === 'reageerpositie') {
         const v = parseInt(value);
         if(v < publicRuntimeConfig.minReageerPositie){
-            color = "green";
+            color = "45deg, $green300 -10%, $green600 50%"
         }
         else if(v >= 50 && v < 100){
-            color = "orange";
+            color = "45deg, $orange300 -10%, $orange600 50%"
         }
         else{
-            color = "red";
+            color = "45deg, $red300 -10%, $red600 50%"
         }
     }
     else if(type === 'huur'){
         const v = parseInt(value);
         if(v < publicRuntimeConfig.maxHuur){
-            color = "green";
+            color = "45deg, $green300 -10%, $green600 50%"
         }
         else{
-            color = "red";
+            color = "45deg, $red300 -10%, $red600 50%"
         }
         data = "€ " + value + ',-';
     }
@@ -69,14 +69,15 @@ export const Counter = ({value, type}) => {
                         direction={'row'}
                         justify={'center'}
                         css={{
-                            width: '150px',
+                            width: '200px',
+                            height: '100px',
                             border: '2.5px dashed $border',
                             borderRadius: '$base',
                         }}
                     >
                         <Box>
                             <Flex direction={'column'}>
-                                <Text h1 css={{margin: 0, color: color}}>
+                                <Text h1 css={{margin: 0, textGradient: color,}}>
                                     {data}
                                 </Text>
                             </Flex>
