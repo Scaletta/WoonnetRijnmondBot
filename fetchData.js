@@ -3,6 +3,7 @@ const puppeteer = require("puppeteer")
 const axios = require("axios")
 
 axios.defaults.withCredentials = true;
+let config;
 let cookieNamesAndValues;
 let inschrijfnummer;
 let woonwens;
@@ -12,6 +13,8 @@ let data = {
     woningen: [],
     refreshDate: Date.now()
 };
+let oldData;
+let newData;
 
 const debug = process.env.npm_config_debug || process.env.DEBUG;
 const username = process.env.npm_config_username || process.env.USERNAME;
@@ -154,6 +157,9 @@ function getWoonaanbodViaIDs() {
                 });
                 data.woningen.push(woning.meerInformatie);
             });
+/*            if(oldData !== undefined) {
+                const newData = data.woningen.filter((item1) => !oldData.woningen.some((item2) => item1.id === item2.id));
+            }*/
             await writeToFile('data', JSON.stringify(data), '/', true).then(async () => {
                 console.info("Written tussenposities to data.json.");
                 console.info("Data from Woonnet Rijnmond is ready!")
@@ -224,11 +230,70 @@ function GetAanbodInformatie(advId) {
             })
     });
 }
+async function readJsonFile(filePath) {
+    try {
+        const jsonData = await fs.readFile(filePath, { encoding: 'utf-8' });
+        return JSON.parse(jsonData);
+    } catch (error) {
+        console.error(error);
+    }
+}
+async function getJsonData(url) {
+    try {
+        const response = await axios.get(url);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
+//Get data from GitHub repo and put in a variables
+async function getPastData() {
+    return new Promise((resolve) => {
+        readJsonFile(__dirname + '/config.json')
+            .then((data) => {
+                config = data;
+                getJsonData(config.GitHubPageURL + 'data/data.json')
+                    .then((data) => {
+                        oldData = data;
+                        console.info("Fetched old data from GitHub.");
+                        resolve();
+                    })
+                    .catch(() => {
+                        console.error("Could not find old data.");
+                        resolve();
+                    });
+            })
+            .catch((error) => console.error(error));
+    });
+}
+
+function createNewDataTest(){
+    readJsonFile(__dirname +'/data/data.json').then(async (data) => {
+        if (oldData !== undefined) {
+            newData = data.woningen.filter((item1) => !oldData.woningen.some((item2) => item1.id === item2.id));
+            if(!config.include55plus){
+                newData = newData.filter((woning) => woning.is55plus === '0');
+            }
+            if(newData.length > 0){
+                console.info("New data found compared to old data.");
+                await writeToFile('newData', JSON.stringify(newData), '/', true).then(async () => {
+                    for(let newWoning of newData){
+                        console.info("Nieuwe woning: " + newWoning.id);
+                    }
+                });
+            }
+        }
+    });
+}
 
 function start() {
-    fetchCookies().then(() => {
-        getWoonwens();
-        getWoonaanbod();
+    console.info("Starting script...");
+    getPastData().then(r => {
+        //createNewDataTest();
+        fetchCookies().then(() => {
+            getWoonwens();
+            getWoonaanbod();
+        });
     });
 }
 

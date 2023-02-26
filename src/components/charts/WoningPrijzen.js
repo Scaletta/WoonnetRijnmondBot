@@ -10,9 +10,16 @@ export const WoningPrijzen = ({woningen}) => {
                 easing: 'linear',
                 speed: 300,
             },
-            id: 'basic-bar',
+            id: 'huurprijzen-reageerpositie',
             fontFamily: 'Inter, sans-serif',
             foreColor: 'var(--nextui-colors-accents9)',
+        },
+        dropShadow: {
+            enabled: true,
+            top: 1,
+            left: 1,
+            blur: 2,
+            opacity: 0.2,
         },
         xaxis: {
             categories: woningen.map((woning) => woning.straat + " " + woning.huisnummer + " " + woning.plaats),
@@ -56,15 +63,22 @@ export const WoningPrijzen = ({woningen}) => {
             position: 'back',
         },
         stroke: {
+            curve: 'smooth',
             width: [0, 4],
         },
         dataLabels: {
-            enabled: false,
-            offsetX: -6,
+            enabled: true,
+            offsetX: 0,
+            offsetY: -20,
             style: {
-                fontSize: '12px',
-                colors: ['#000']
+                fontSize: '9px',
+                colors: ['var(--nextui-colors-accents8)']
             }
+        },
+        legend: {
+            position: 'top',
+            horizontalAlign: 'left',
+            offsetY: 0
         },
         markers: true,
     };
@@ -93,7 +107,7 @@ export const WoningPrijzen = ({woningen}) => {
         {
             name: "Reageerpositie",
             type: "line",
-            data: woningen.map((woning) => Number(parseInt(woning.reageerpositie))),
+            data: woningen.map((woning) => woning.verdeelmodel === "WoningLoting" || woning.verdeelmodel === "Wens&Wacht" ? 0 : Number.parseInt(woning.reageerpositie)),
             tooltip: {
                 x: {
                     formatter: function (val) {
