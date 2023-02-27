@@ -1,7 +1,9 @@
 const fs = require("fs/promises")
 const puppeteer = require("puppeteer")
 const axios = require("axios")
+const Pushover = require("pushover-notifications");
 
+//Data
 axios.defaults.withCredentials = true;
 let config;
 let cookieNamesAndValues;
@@ -16,14 +18,37 @@ let data = {
 let oldData;
 let newData;
 
+//ENV VARS
 const debug = process.env.npm_config_debug || process.env.DEBUG;
 const username = process.env.npm_config_username || process.env.USERNAME;
 const password = process.env.npm_config_password || process.env.PASSWORD;
+const GitHubPageURL = process.env.npm_config_githubpageurl || process.env.GITHUBPAGEURL;
+let include55plus = process.env.npm_config_include55plus || process.env.INCLUDE55PLUS;
+const pushover_app_key = process.env.npm_config_pushoverappkey || process.env.PUSHOVERAPPKEY;
+const pushover_user_key = process.env.npm_config_pushoveruserkey || process.env.PUSHOVERUSERKEY;
 if (typeof username === 'undefined' || typeof password === 'undefined') {
     console.error("Username or Password is not set!")
     return;
 }
+if (typeof pushover_app_key === 'undefined' || typeof pushover_user_key === 'undefined') {
+    console.error("Pushover credentials are not set!")
+    return;
+}
+if (typeof GitHubPageURL === 'undefined') {
+    console.error("GitHubPageURL is not set!")
+    return;
+}
+if (typeof GitHubPageURL === 'undefined') {
+    console.error("GitHubPageURL is not set!")
+    return;
+}
+if (typeof include55plus === 'undefined') {
+    console.error("include55plus is not set, falling back to False")
+    include55plus = false;
+    return;
+}
 
+// SCRIPT
 async function writeToFile(name, data, folder = '/', force = false) {
     if (debug || force) {
         await fs.writeFile(__dirname + '/data' + folder + name + '.json', data).then(() => {
@@ -157,12 +182,14 @@ function getWoonaanbodViaIDs() {
                 });
                 data.woningen.push(woning.meerInformatie);
             });
-/*            if(oldData !== undefined) {
-                const newData = data.woningen.filter((item1) => !oldData.woningen.some((item2) => item1.id === item2.id));
-            }*/
-            await writeToFile('data', JSON.stringify(data), '/', true).then(async () => {
-                console.info("Written tussenposities to data.json.");
-                console.info("Data from Woonnet Rijnmond is ready!")
+            /*            if(oldData !== undefined) {
+                            const newData = data.woningen.filter((item1) => !oldData.woningen.some((item2) => item1.id === item2.id));
+                        }*/
+            await pushNewData().then(async () => {
+                await writeToFile('data', JSON.stringify(data), '/', true).then(async () => {
+                    console.info("Written tussenposities to data.json.");
+                    console.info("Data from Woonnet Rijnmond is ready!")
+                });
             });
         })
         .catch(async error => {
@@ -230,14 +257,16 @@ function GetAanbodInformatie(advId) {
             })
     });
 }
+
 async function readJsonFile(filePath) {
     try {
-        const jsonData = await fs.readFile(filePath, { encoding: 'utf-8' });
+        const jsonData = await fs.readFile(filePath, {encoding: 'utf-8'});
         return JSON.parse(jsonData);
     } catch (error) {
         console.error(error);
     }
 }
+
 async function getJsonData(url) {
     try {
         const response = await axios.get(url);
@@ -246,50 +275,121 @@ async function getJsonData(url) {
         console.error(error);
     }
 }
+
 //Get data from GitHub repo and put in a variables
 async function getPastData() {
     return new Promise((resolve) => {
         readJsonFile(__dirname + '/config.json')
             .then((data) => {
                 config = data;
-                getJsonData(config.GitHubPageURL + 'data/data.json')
-                    .then((data) => {
-                        oldData = data;
-                        console.info("Fetched old data from GitHub.");
-                        resolve();
-                    })
-                    .catch(() => {
-                        console.error("Could not find old data.");
-                        resolve();
-                    });
+                if(debug){
+                    readJsonFile(__dirname + '/data/oldData.json')
+                        .then((data) => {
+                            oldData = data;
+                            console.info("Fetched old data from GitHub.");
+                            resolve();
+                        })
+                        .catch(() => {
+                            console.error("Could not find old data.");
+                            resolve();
+                        });
+                }
+                else{
+                    getJsonData(GitHubPageURL + 'data/data.json')
+                        .then((data) => {
+                            oldData = data;
+                            console.info("Fetched old data from GitHub.");
+                            resolve();
+                        })
+                        .catch(() => {
+                            console.error("Could not find old data.");
+                            resolve();
+                        });
+                }
             })
             .catch((error) => console.error(error));
     });
 }
 
-function createNewDataTest(){
-    readJsonFile(__dirname +'/data/data.json').then(async (data) => {
-        if (oldData !== undefined) {
-            newData = data.woningen.filter((item1) => !oldData.woningen.some((item2) => item1.id === item2.id));
-            if(!config.include55plus){
-                newData = newData.filter((woning) => woning.is55plus === '0');
-            }
-            if(newData.length > 0){
-                console.info("New data found compared to old data.");
-                await writeToFile('newData', JSON.stringify(newData), '/', true).then(async () => {
-                    for(let newWoning of newData){
-                        console.info("Nieuwe woning: " + newWoning.id);
-                    }
-                });
-            }
-        }
+function createNewDataTest() {
+    readJsonFile(__dirname + '/data/oldData.json').then(async (data) => {
+        await pushNewData();
     });
+}
+
+async function pushNewData() {
+    if (oldData !== undefined) {
+        newData = data.woningen.filter((item1) => !oldData.woningen.some((item2) => item1.id === item2.id));
+        if (!include55plus) {
+            newData = newData.filter((woning) => woning.is55plus === '0');
+        }
+        if (newData.length > 0) {
+            console.info("New data found compared to old data.");
+            await writeToFile('newData', JSON.stringify(newData), '/', true).then(async () => {
+                for (const newWoning of newData) {
+                    const i = newData.indexOf(newWoning);
+                    let shouldAddFile = false;
+                    let imageResponse;
+                    try {
+                        imageResponse = await axios("http:" + newWoning.media[0].mainfoto, {responseType: 'arraybuffer'});
+                        shouldAddFile = true;
+                    } catch (error) {
+
+                    }
+                    const push = new Pushover({
+                        token: pushover_app_key,
+                        user: pushover_user_key
+                    });
+                    const message = {
+                        message: `Er is een nieuwe woning toegevoegd: <b>${newWoning.straat} ${newWoning.huisnummer} in ${newWoning.plaats}</b>. Als je nu zou reageren dan zou je op plek <b>${parseInt(newWoning.reageerpositie)}</b> van de <b>${parseInt(newWoning.aantalreacties)}</b> staan.`,
+                        title: `Nieuwe woning: ${newWoning.straat} ${newWoning.huisnummer} in ${newWoning.plaats}`,
+                        sound: "magic",
+                        url: `${GitHubPageURL}woning/${newWoning.id}`,
+                        url_title: "Bekijk de woning op Woonnet Rijnmond Bot",
+                        html: 1
+                    };
+                    if (shouldAddFile) {
+                        message.file = {
+                            name: `woning_${newWoning.id}.png`,
+                            data: imageResponse.data
+                        };
+                    }
+                    push.send(message, function (error, result) {
+                        if (error) {
+                            //throw err
+                            console.error('Error sending push notification to Pushover. Error: ' + error)
+                        }
+
+                        console.info('Sent push notifcation: ' + result.request)
+                    })
+                    console.info("New woning %i: %s", i + 1, newWoning.id);
+                }
+            });
+            console.info('%s woningen added to newData.json', newData.length);
+            data = {
+                woningen: data.woningen.map((item) => {
+                    const isNew = newData.find((x) => x.id === item.id);
+                    if (isNew) {
+                        return {...item, isNew: true};
+                    } else {
+                        return {...item, isNew: false};
+                    }
+                })
+            };
+            await writeToFile('newDataTest', JSON.stringify(data), '/', false);
+        }
+        else{
+            console.info("No new data found.")
+        }
+    }
+    else{
+        console.info("No new data found.")
+    }
 }
 
 function start() {
     console.info("Starting script...");
     getPastData().then(r => {
-        //createNewDataTest();
         fetchCookies().then(() => {
             getWoonwens();
             getWoonaanbod();

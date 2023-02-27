@@ -79,6 +79,10 @@ jobs:
         env:
           USERNAME: ${{ secrets.WOONNET_USERNAME }}
           PASSWORD: ${{ secrets.WOONNET_PASSWORD }}
+          GITHUBPAGEURL: ${{ steps.deployment.outputs.page_url }}
+          PUSHOVERAPPKEY: ${{ secrets.PUSHOVER_APP_KEY }}
+          PUSHOVERUSERKEY: ${{ secrets.PUSHOVER_USER_KEY }}
+          INCLUDE55PLUS: ${{ secrets.INCLUDE55PLUS }}
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
         env:
