@@ -79,7 +79,7 @@ jobs:
         env:
           USERNAME: ${{ secrets.WOONNET_USERNAME }}
           PASSWORD: ${{ secrets.WOONNET_PASSWORD }}
-          GITHUBPAGEURL: ${{ steps.deployment.outputs.page_url }}
+          GITHUBPAGEURL: ${{ vars.GITHUBPAGEURL }}
           PUSHOVERAPPKEY: ${{ secrets.PUSHOVER_APP_KEY }}
           PUSHOVERUSERKEY: ${{ secrets.PUSHOVER_USER_KEY }}
           INCLUDE55PLUS: ${{ secrets.INCLUDE55PLUS }}
