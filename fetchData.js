@@ -5,7 +5,6 @@ const Pushover = require("pushover-notifications");
 
 //Data
 axios.defaults.withCredentials = true;
-let config;
 let cookieNamesAndValues;
 let inschrijfnummer;
 let woonwens;
@@ -279,36 +278,30 @@ async function getJsonData(url) {
 //Get data from GitHub repo and put in a variables
 async function getPastData() {
     return new Promise((resolve) => {
-        readJsonFile(__dirname + '/config.json')
-            .then((data) => {
-                config = data;
-                if(debug){
-                    readJsonFile(__dirname + '/data/oldData.json')
-                        .then((data) => {
-                            oldData = data;
-                            console.info("Fetched old data from GitHub.");
-                            resolve();
-                        })
-                        .catch(() => {
-                            console.error("Could not find old data.");
-                            resolve();
-                        });
-                }
-                else{
-                    getJsonData(GitHubPageURL + 'data/data.json')
-                        .then((data) => {
-                            oldData = data;
-                            console.info("Fetched old data from GitHub.");
-                            resolve();
-                        })
-                        .catch(() => {
-                            console.error("Could not find old data.");
-                            resolve();
-                        });
-                }
-            })
-            .catch((error) => console.error(error));
-    });
+        if (debug) {
+            readJsonFile(__dirname + '/data/oldData.json')
+                .then((data) => {
+                    oldData = data;
+                    console.info("Fetched old data from GitHub.");
+                    resolve();
+                })
+                .catch(() => {
+                    console.error("Could not find old data.");
+                    resolve();
+                });
+        } else {
+            getJsonData(GitHubPageURL + 'data/data.json')
+                .then((data) => {
+                    oldData = data;
+                    console.info("Fetched old data from GitHub.");
+                    resolve();
+                })
+                .catch(() => {
+                    console.error("Could not find old data.");
+                    resolve();
+                });
+        }
+    })
 }
 
 function createNewDataTest() {
@@ -377,12 +370,10 @@ async function pushNewData() {
                 })
             };
             await writeToFile('newDataTest', JSON.stringify(data), '/', false);
-        }
-        else{
+        } else {
             console.info("No new data found.")
         }
-    }
-    else{
+    } else {
         console.info("No new data found.")
     }
 }
