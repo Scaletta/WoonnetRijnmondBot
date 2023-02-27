@@ -24,10 +24,11 @@ Automaticly check your estimated place for houses based on your preferences ever
 
 ## How to use
 1. `Fork this repo`.
-2. Add the repository secrets `WOONNET_USERNAME` & `WOONNET_PASSWORD` with your own credentials of Woonnet Rijnmond.
-3. **Enable Github Pages** at Settings and select **GitHub Actions** as Source
-4. Run your first action.
-5. Your data will be fetched and will be published to your Github Page.
+2. Add the repository secrets: `WOONNET_USERNAME`, `WOONNET_PASSWORD`, `INCLUDE55PLUS`, `PUSHOVERAPPKEY` & `PUSHOVERUSERKEY` with your own credentials of Woonnet Rijnmond.
+3. Add the repository variable: `GITHUBPAGEURL` according to your GitHub Page URL.
+4. **Enable Github Pages** at Settings and select **GitHub Actions** as Source
+5. Run your first action.
+6. Your data will be fetched and will be published to your Github Page.
 
 ## Dependencies
 - [React](https://github.com/facebook/react)
