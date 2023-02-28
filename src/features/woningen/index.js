@@ -11,7 +11,6 @@ export const Woningen = ({woningen}) => {
     }
     function sortedWoningen(searchQuery = '') {
         return woningen.woningen
-            .filter((woning) => woning.is55plus !== "1" && woning.minleeftijd !== "55" && woning.verdeelmodel !== "Wens&Wacht")
             .filter((woning) =>
                 Object.values(woning).some((value) =>
                     String(value).toLowerCase().includes(searchQuery.toLowerCase())

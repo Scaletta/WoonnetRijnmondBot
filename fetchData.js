@@ -181,6 +181,9 @@ function getWoonaanbodViaIDs() {
             /*            if(oldData !== undefined) {
                             const newData = data.woningen.filter((item1) => !oldData.woningen.some((item2) => item1.id === item2.id));
                         }*/
+            if(!include55plus) {
+                data.woningen = data.woningen.filter((woning) => woning.is55plus !== "1" && woning.minleeftijd !== "55" && woning.verdeelmodel !== "Wens&Wacht");
+            }
             await pushNewData().then(async () => {
                 await writeToFile('data', JSON.stringify(data), '/', true).then(async () => {
                     console.info("Written tussenposities to data.json.");
@@ -301,17 +304,11 @@ async function getPastData() {
     })
 }
 
-function createNewDataTest() {
-    readJsonFile(__dirname + '/data/oldData.json').then(async (data) => {
-        await pushNewData();
-    });
-}
-
 async function pushNewData() {
     if (oldData !== undefined) {
         newData = data.woningen.filter((item1) => !oldData.woningen.some((item2) => item1.id === item2.id));
         if (!include55plus) {
-            newData = newData.filter((woning) => woning.is55plus === '0');
+            newData = newData.filter((woning) => woning.is55plus !== "1" && woning.minleeftijd !== "55" && woning.verdeelmodel !== "Wens&Wacht");
         }
         if (newData.length > 0) {
             console.info("New data found compared to old data.");
@@ -379,7 +376,7 @@ async function pushNewData() {
 
 function start() {
     console.info("Starting script...");
-    getPastData().then(r => {
+    getPastData().then(() => {
         fetchCookies().then(() => {
             getWoonwens();
             getWoonaanbod();

@@ -49,7 +49,6 @@ export default function Home(props) {
     }
     function getLatestWoningen() {
         return props.woningen.woningen
-            .filter((woning) => woning.is55plus !== "1" || publicRuntimeConfig.include55plus === true)
             .map((woning) => ({
                 ...woning,
                 publstart: new Date(woning.publstart),
@@ -60,7 +59,6 @@ export default function Home(props) {
 
     function getWoningPrijzen() {
         return props.woningen.woningen
-            .filter((woning) => woning.is55plus !== "1" || publicRuntimeConfig.include55plus === true)
             .map((woning) => ({
                 ...woning,
                 publstart: new Date(woning.publstart),
@@ -69,7 +67,6 @@ export default function Home(props) {
     }
     function getGemiddeldeReageerpositie(){
         const reageerpositieArray = props.woningen.woningen
-            .filter((woning) => woning.is55plus !== "1" || publicRuntimeConfig.include55plus === true)
             .filter((woning) => woning.verdeelmodel !== "WoningLoting" && woning.verdeelmodel !== "Wens&Wacht")
             .map((woning) => Number(woning.reageerpositie));
         const totalReageerpositie = reageerpositieArray.reduce((total, currentValue) => total + currentValue, 0);
@@ -78,7 +75,6 @@ export default function Home(props) {
 
     function getGemiddeldeHuur(){
         const reageerpositieArray = props.woningen.woningen
-            .filter((woning) => woning.is55plus !== "1" || publicRuntimeConfig.include55plus === true)
             .map((woning) => {
             const datapoint = !isNaN(parseInt(woning.kalehuur)) ? parseInt(woning.kalehuur) : parseInt(woning.totalehuurmin);
             return Number(datapoint);

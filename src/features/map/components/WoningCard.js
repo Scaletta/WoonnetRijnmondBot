@@ -53,8 +53,7 @@ export default function WoningCard({index, data}) {
     })();
     return (
         <Card key={index++}
-
-              css={{ w: "100%", h: "530px" }}>
+              css={{ width: "100%", height: "530px" }}>
             <Card.Header css={{ position: "absolute", backdropFilter: "saturate(180%) blur(10px)", background: "rgba(15, 17, 20, 0.4)", borderBottom: "var(--nextui-borderWeights-light) solid var(--nextui-colors-gray800)", top: "0px", zIndex: 1 }} >
                 <Row gap={1} justify="flex-start" align="flex-start">
                     <Col>

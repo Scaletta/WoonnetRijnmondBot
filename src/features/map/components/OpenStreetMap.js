@@ -11,7 +11,7 @@ const OpenStreetMap = ({woningen}) => {
         iconUrl: router.basePath + "/images/marker-icon.png",
         shadowUrl: router.basePath + "/images/marker-shadow.png",
     })
-    const [center, setCenter] = useState({lat: 51.9228, lng: 4.4891})
+    const [center] = useState({lat: 51.9228, lng: 4.4891})
     const ZOOM_LEVEL = 12
     const mapRef = useRef()
     return (
@@ -20,14 +20,14 @@ const OpenStreetMap = ({woningen}) => {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
             />
-            {woningen.woningen.map((location, index) => (
+            {woningen.woningen.map((location) => (
                 <Marker
                     iconShadow={icon}
                     icon={icon}
                     key={location.id}
                     position={[location.latitude, location.longitude]}
                 >
-                    <Popup minWidth={500}>
+                    <Popup minWidth={400}>
                             <WoningSlider woning={location} header={true}></WoningSlider>
                     </Popup>
                 </Marker>
