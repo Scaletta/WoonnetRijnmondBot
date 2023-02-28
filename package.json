@@ -15,7 +15,6 @@
     "next-themes": "^0.2.1",
     "puppeteer": "^19.7.2",
     "pushover-notifications": "^1.2.2",
-    "r": "^0.0.5",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.0",
     "react-dom": "18.2.0",

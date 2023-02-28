@@ -30,12 +30,7 @@ if (typeof username === 'undefined' || typeof password === 'undefined') {
     return;
 }
 if (typeof pushover_app_key === 'undefined' || typeof pushover_user_key === 'undefined') {
-    console.error("Pushover credentials are not set!")
-    return;
-}
-if (typeof GitHubPageURL === 'undefined') {
-    console.error("GitHubPageURL is not set!")
-    return;
+    console.error("Pushover credentials are not set!\nPushnotifications are off.")
 }
 if (typeof GitHubPageURL === 'undefined') {
     console.error("GitHubPageURL is not set!")
@@ -44,7 +39,6 @@ if (typeof GitHubPageURL === 'undefined') {
 if (typeof include55plus === 'undefined') {
     console.error("include55plus is not set, falling back to False")
     include55plus = false;
-    return;
 }
 else{
     include55plus = JSON.parse(include55plus);
@@ -330,34 +324,36 @@ async function pushNewData() {
                         imageResponse = await axios("http:" + newWoning.media[0].mainfoto, {responseType: 'arraybuffer'});
                         shouldAddFile = true;
                     } catch (error) {
-
+                        //Cant fetch image of woning.
                     }
-                    const push = new Pushover({
-                        token: pushover_app_key,
-                        user: pushover_user_key
-                    });
-                    const message = {
-                        message: `Er is een nieuwe woning toegevoegd: <b>${newWoning.straat} ${newWoning.huisnummer} in ${newWoning.plaats}</b>. Als je nu zou reageren dan zou je op plek <b>${parseInt(newWoning.reageerpositie)}</b> van de <b>${parseInt(newWoning.aantalreacties)}</b> staan.`,
-                        title: `Nieuwe woning: ${newWoning.straat} ${newWoning.huisnummer} in ${newWoning.plaats}`,
-                        sound: "magic",
-                        url: `${GitHubPageURL}woning/${newWoning.id}`,
-                        url_title: "Bekijk de woning op Woonnet Rijnmond Bot",
-                        html: 1
-                    };
-                    if (shouldAddFile) {
-                        message.file = {
-                            name: `woning_${newWoning.id}.png`,
-                            data: imageResponse.data
+                    if(typeof pushover_app_key !== 'undefined' || typeof pushover_user_key !== 'undefined') {
+                        const push = new Pushover({
+                            token: pushover_app_key,
+                            user: pushover_user_key
+                        });
+                        const message = {
+                            message: `Er is een nieuwe woning toegevoegd: <b>${newWoning.straat} ${newWoning.huisnummer} in ${newWoning.plaats}</b>. Als je nu zou reageren dan zou je op plek <b>${parseInt(newWoning.reageerpositie)}</b> van de <b>${parseInt(newWoning.aantalreacties)}</b> staan.`,
+                            title: `Nieuwe woning: ${newWoning.straat} ${newWoning.huisnummer} in ${newWoning.plaats}`,
+                            sound: "magic",
+                            url: `${GitHubPageURL}woning/${newWoning.id}`,
+                            url_title: "Bekijk de woning op Woonnet Rijnmond Bot",
+                            html: 1
                         };
-                    }
-                    push.send(message, function (error, result) {
-                        if (error) {
-                            //throw err
-                            console.error('Error sending push notification to Pushover. Error: ' + error)
+                        if (shouldAddFile) {
+                            message.file = {
+                                name: `woning_${newWoning.id}.png`,
+                                data: imageResponse.data
+                            };
                         }
+                        push.send(message, function (error, result) {
+                            if (error) {
+                                //throw err
+                                console.error('Error sending push notification to Pushover. Error: ' + error)
+                            }
 
-                        console.info('Sent push notifcation: ' + result.request)
-                    })
+                            console.info('Sent push notifcation: ' + result.request)
+                        })
+                    }
                     console.info("New woning %i: %s", i + 1, newWoning.id);
                 }
             });
