@@ -1,5 +1,5 @@
 import {Col, Row, User, Text, Tooltip, Popover} from '@nextui-org/react';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {EyeIcon} from '../icons/table/eye-icon';
 import {IconButton, StyledBadge} from './table.styled';
 import getConfig from "next/config";
@@ -8,7 +8,27 @@ import {WoningSlider} from "../woning/WoningSlider";
 
 const {publicRuntimeConfig} = getConfig();
 export const RenderCell = ({woning, columnKey}) => {
-    // @ts-ignore
+    const [timeRemaining, setTimeRemaining] = useState(calculateTimeRemaining());
+    function calculateTimeRemaining() {
+        const now = new Date();
+        const startDate = new Date(woning.publstart);
+        const endDate = new Date(woning.publstop);
+
+        if (now < startDate) {
+            return startDate - now;
+        } else if (now > endDate) {
+            return 0;
+        } else {
+            return endDate - now;
+        }
+    }
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            setTimeRemaining(calculateTimeRemaining());
+        }, 1000);
+
+        return () => clearInterval(intervalId);
+    }, []);
     const cellValue = woning[columnKey];
     let avatarImage;
     if(woning.media[0].mainfoto !== null && woning.media[0].mainfoto !== ""){
@@ -45,7 +65,7 @@ export const RenderCell = ({woning, columnKey}) => {
                             size={13}
                             css={{tt: 'capitalize', color: '$accents7'}}
                         >
-                            Kalehuur: € {woning.kalehuur}
+                            Kaal: € {woning.kalehuur}
                         </Text>
                     </Row>
                 </Col>
@@ -128,6 +148,31 @@ export const RenderCell = ({woning, columnKey}) => {
                         </Text>
                     </Row>
                 </Col>
+            );
+        case 'publstop':
+            if(woning.verdeelmodel === "Wens&Wacht"){
+                return (
+                    <StyledBadge type={"low"}>N.V.T.</StyledBadge>
+                )
+            }
+            const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+            let style = "medium"
+            let text = days.toString().padStart(1, '0') + "dag " + hours.toString().padStart(2, '0') + ":" + minutes.toString().padStart(2, '0') + ":" + seconds.toString().padStart(2, '0');
+            if(days >= 3){
+                style = "low";
+            }
+            else if(days > 0){
+                style = "medium";
+            }
+            else {
+                style = "high";
+                text = hours.toString().padStart(2, '0') + ":" + minutes.toString().padStart(2, '0') + ":" + seconds.toString().padStart(2, '0');
+            }
+            return (
+                <StyledBadge type={style}>{text}</StyledBadge>
             );
         default:
             return (

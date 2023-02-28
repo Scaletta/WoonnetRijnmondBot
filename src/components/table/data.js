@@ -7,5 +7,6 @@ export const columns = [
     {name: 'VERDEELMODEL', uid: 'verdeelmodel'},
     {name: 'REACTIES', uid: 'aantalreacties'},
     {name: 'POSITIE', uid: 'reageerpositie'},
+    {name: 'BESCHIKBAAR', uid: 'publstop'},
     {name: 'ACTIONS', uid: 'actions'},
 ];

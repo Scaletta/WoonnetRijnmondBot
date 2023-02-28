@@ -62,7 +62,7 @@ export const TableWrapper = ({data}) => {
                         <Table.Row>
                             {(columnKey) => (
                                 <Table.Cell>
-                                    {RenderCell({woning: item, columnKey: columnKey})}
+                                    <RenderCell woning={item} columnKey={columnKey}/>
                                 </Table.Cell>
                             )}
                         </Table.Row>
@@ -73,7 +73,7 @@ export const TableWrapper = ({data}) => {
                     noMargin
                     align="center"
                     rowsPerPage={10}
-                    onPageChange={(page) => console.log({page})}
+                    //onPageChange={(page) => console.log({page})}
                 />
             </Table>
         </Box>
