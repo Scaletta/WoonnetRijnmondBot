@@ -9,7 +9,7 @@ import getConfig from "next/config";
 import {CgDarkMode} from "react-icons/cg";
 
 const { publicRuntimeConfig } = getConfig();
-const modifiedDate = new Date(publicRuntimeConfig.modifiedDate).toLocaleString();
+const modifiedDate = new Date(publicRuntimeConfig.modifiedDate).toLocaleString('nl-NL');
 export const NavbarWrapper = ({children}) => {
     return (
         <Box
