@@ -46,6 +46,9 @@ if (typeof include55plus === 'undefined') {
     include55plus = false;
     return;
 }
+else{
+    include55plus = JSON.parse(include55plus);
+}
 
 // SCRIPT
 async function writeToFile(name, data, folder = '/', force = false) {
