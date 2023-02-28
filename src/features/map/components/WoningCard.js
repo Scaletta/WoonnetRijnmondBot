@@ -53,8 +53,8 @@ export default function WoningCard({index, data}) {
     })();
     return (
         <Card key={index++}
-              isHoverable
-              css={{ w: "100%", h: "430px" }}>
+
+              css={{ w: "100%", h: "530px" }}>
             <Card.Header css={{ position: "absolute", backdropFilter: "saturate(180%) blur(10px)", background: "rgba(15, 17, 20, 0.4)", borderBottom: "var(--nextui-borderWeights-light) solid var(--nextui-colors-gray800)", top: "0px", zIndex: 1 }} >
                 <Row gap={1} justify="flex-start" align="flex-start">
                     <Col>
@@ -130,7 +130,7 @@ export default function WoningCard({index, data}) {
                                                 weight="bold"
                                                 transform="uppercase"
                                             >
-                                                Bekijk dit krot
+                                                Bekijk woning
                                             </Text>
                                         </Button>
                                     </Link>

@@ -10,17 +10,24 @@ const {publicRuntimeConfig} = getConfig();
 export const RenderCell = ({woning, columnKey}) => {
     // @ts-ignore
     const cellValue = woning[columnKey];
+    let avatarImage;
+    if(woning.media[0].mainfoto !== null && woning.media[0].mainfoto !== ""){
+        avatarImage = "https:" + woning.media[0].mainfoto;
+    }
+    else{
+        avatarImage = "https:" + woning.media[0].presentation;
+    }
     switch (columnKey) {
         case 'straat':
             return (
-                <Popover>
+                <Popover placement={"top-right"}>
                     <Popover.Trigger>
-                        <User squared src={'https:' + woning.media[0].mobile} name={cellValue + ' ' + woning.huisnummer}  css={{p: 0}}>
+                        <User squared src={avatarImage} name={cellValue + ' ' + woning.huisnummer}  css={{p: 0}}>
                             {woning.plaats} - {woning.wijk}
                         </User>
                     </Popover.Trigger>
                     <Popover.Content>
-                        <WoningSlider woning={woning}></WoningSlider>
+                        {woning.media.length > 1 ? <WoningSlider woning={woning} /> : null}
                     </Popover.Content>
                 </Popover>
             );

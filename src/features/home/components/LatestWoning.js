@@ -5,6 +5,7 @@ import {Flex} from '../../../components/styles/flex';
 import Link from "next/link";
 
 export const LatestWoning = ({woning}) => {
+    let image;
     if (woning === undefined) return (
         <Card
             css={{
@@ -17,6 +18,12 @@ export const LatestWoning = ({woning}) => {
             <Loading size="md"></Loading>
         </Card>
     );
+    if(woning.media[0].presentation !== null && woning.media[0].presentation !== ""){
+        image = "https:" + woning.media[0].presentation;
+    }
+    else{
+        image = "https:" + woning.media[0].stamp;
+    }
     return (
         <Link href={`/woning/${woning.id}`}>
             <Container css={{px: '$6'}}>
@@ -27,7 +34,7 @@ export const LatestWoning = ({woning}) => {
                         mw: '375px',
                         minHeight: '200px',
                         maxHeight: '200px',
-                        backgroundImage: `url(${woning.media[0].stamp})`,
+                        backgroundImage: `url(${image})`,
                         backgroundSize: 'cover',
                     }}
                 >

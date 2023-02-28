@@ -57,7 +57,7 @@ export const Woningen = ({woningen}) => {
                 }}
                 weight="bold"
             >
-                Woningmap
+                Woningen
             </Text>
             <Flex
                 css={{gap: '$8'}}
