@@ -9,7 +9,7 @@ const OpenStreetMap = ({woningen}) => {
     const router = useRouter()
     const icon = L.icon({
         iconUrl: router.basePath + "/images/marker-icon.png",
-        iconRetinaUrl: router.basePath + "/images/marker-icon-2x.png",
+        //iconRetinaUrl: router.basePath + "/images/marker-icon-2x.png",
         shadowUrl: router.basePath + "/images/marker-shadow.png",
     });
     const [center, setCenter] = useState({lat: 51.9228, lng: 4.4891})
