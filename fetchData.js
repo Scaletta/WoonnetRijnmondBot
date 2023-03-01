@@ -155,6 +155,7 @@ function getWoonaanbodViaIDs() {
             woonaanbodViaIDs = response.data;
             await writeToFile('data', JSON.stringify(woonaanbodViaIDs));
             console.info("Fetched woonaanbodViaIDs successfully.");
+            console.info("Fetching tussenposities for each house now...");
             for (const woning of woonaanbodViaIDs.d) {
                 const advNummer = woning.advertentienummer;
                 const advId = woning.id;
@@ -215,7 +216,7 @@ function GetTussenPositie(advId) {
             .then(async response => {
                 let tussenpositie = response.data.d;
                 await writeToFile('tussenposities', JSON.stringify(tussenpositie));
-                console.info("Fetched tussenpositie for: " + advId + "=" + tussenpositie);
+                //console.info("Fetched tussenpositie for: " + advId + "=" + tussenpositie);
                 resolve(tussenpositie);
             })
             .catch(async error => {
@@ -246,7 +247,7 @@ function GetAanbodInformatie(advId) {
         })
             .then(async response => {
                 let aanbodinformatie = response.data;
-                console.info("Fetched aanbodinformatie for: " + advId);
+                //console.info("Fetched aanbodinformatie for: " + advId);
                 await writeToFile(advId, JSON.stringify(aanbodinformatie.d), '/huizen/');
                 resolve(aanbodinformatie.d);
             })
