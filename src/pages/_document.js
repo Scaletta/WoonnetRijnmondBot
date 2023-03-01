@@ -1,7 +1,6 @@
 import React from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { CssBaseline } from '@nextui-org/react';
-import {router} from "next/client";
 
 class MyDocument extends Document {
     static async getInitialProps(ctx) {
@@ -13,11 +12,10 @@ class MyDocument extends Document {
     }
 
     render() {
-        const webmanifest = router.basePath + '/manifest.webmanifest';
         return (
             <Html lang="en">
                 <Head>
-                    <link rel={webmanifest} />
+                   {/* <link rel='manifest' href='/manifest.webmanifest' />*/}
                     {CssBaseline.flush()}
                 </Head>
                 <body>
