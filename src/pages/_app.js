@@ -2,6 +2,9 @@ import '../components/styles/globals.css';
 import {createTheme, NextUIProvider} from '@nextui-org/react';
 import {ThemeProvider as NextThemesProvider} from 'next-themes';
 import {Layout} from '../components/layout/layout';
+import Head from "next/head";
+import React from "react";
+import {useRouter} from "next/router";
 
 const lightTheme = createTheme({
     type: 'light',
@@ -18,6 +21,8 @@ const darkTheme = createTheme({
 });
 
 function MyApp({Component, pageProps}) {
+    const router= useRouter()
+    const manifest = router.basePath + "/manifest.webmanifest";
     return (
         <NextThemesProvider
             defaultTheme="system"
@@ -28,6 +33,9 @@ function MyApp({Component, pageProps}) {
             }}
         >
             <NextUIProvider>
+                <Head>
+                    <link rel='manifest' href={manifest} />
+                </Head>
                 <Layout>
                     <Component {...pageProps} />
                 </Layout>

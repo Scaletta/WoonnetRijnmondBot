@@ -15,7 +15,6 @@ class MyDocument extends Document {
         return (
             <Html lang="en">
                 <Head>
-                    <link rel='manifest' href="/manifest.webmanifest" />
                     {CssBaseline.flush()}
                 </Head>
                 <body>
