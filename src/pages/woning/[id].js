@@ -22,7 +22,6 @@ export async function getStaticProps({params}) {
     const jsonData = await fsPromises.readFile(filePath);
     const woningen = JSON.parse(jsonData);
     const woning = woningen.woningen.find((woning) => woning.id === params.id)
-    console.log(woning);
     return {
         props: woning
     };

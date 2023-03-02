@@ -80,7 +80,6 @@ export default function Home(props) {
             return Number(datapoint);
         });
         const totalReageerpositie = reageerpositieArray.reduce((total, currentValue) => total + currentValue, 0);
-        console.log(totalReageerpositie / reageerpositieArray.length);
         return parseInt(totalReageerpositie / reageerpositieArray.length);
     }
 
