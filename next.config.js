@@ -1,6 +1,7 @@
 const withPWA = require('next-pwa')({
     dest: 'public',
     register: true,
+    disable: process.env.NODE_ENV === 'development',
     fallbacks: {
         document: process.env.BASEPATH ? '/' + process.env.BASEPATH.split('/').pop() + '/_offline' : '/_offline'
     },

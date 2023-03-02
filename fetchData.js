@@ -19,6 +19,7 @@ let newData;
 
 //ENV VARS
 const debug = process.env.npm_config_debug || process.env.DEBUG;
+const nopush = process.env.npm_config_nopush || process.env.NOPUSH;
 const username = process.env.npm_config_username || process.env.USERNAME;
 const password = process.env.npm_config_password || process.env.PASSWORD;
 const GitHubPageURL = process.env.npm_config_githubpageurl || process.env.GITHUBPAGEURL;
@@ -182,6 +183,7 @@ function getWoonaanbodViaIDs() {
             /*            if(oldData !== undefined) {
                             const newData = data.woningen.filter((item1) => !oldData.woningen.some((item2) => item1.id === item2.id));
                         }*/
+            data.woningen = data.woningen.filter((woning) => woning.redengeenvoorrang === "");
             if(!include55plus) {
                 data.woningen = data.woningen.filter((woning) => woning.is55plus !== "1" && woning.minleeftijd !== "55" && woning.verdeelmodel !== "Wens&Wacht");
             }
@@ -343,14 +345,16 @@ async function pushNewData() {
                                 data: imageResponse.data
                             };
                         }
-                        push.send(message, function (error, result) {
-                            if (error) {
-                                //throw err
-                                console.error('Error sending push notification to Pushover. Error: ' + error)
-                            }
+                        if(!nopush) {
+                            push.send(message, function (error, result) {
+                                if (error) {
+                                    //throw err
+                                    console.error('Error sending push notification to Pushover. Error: ' + error)
+                                }
 
-                            console.info('Sent push notifcation: ' + result.request)
-                        })
+                                console.info('Sent push notifcation: ' + result.request)
+                            })
+                        }
                     }
                     console.info("New woning %i: %s", i + 1, newWoning.id);
                 }
