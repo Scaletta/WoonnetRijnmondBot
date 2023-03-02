@@ -327,16 +327,16 @@ export const Woning = ({woning}) => {
                 <Grid xs={12} md={3}>
                     <Reageerkans/>
                 </Grid>
-                <Grid xs={3}>
+                <Grid xs={12} md={3}>
                     <Woningomschrijving/>
                 </Grid>
-                <Grid xs={3}>
+                <Grid xs={12} md={3}>
                     <WoningInformatie/>
                 </Grid>
-                <Grid xs={3}>
+                <Grid xs={12} md={3}>
                     <Woningoppervlakte/>
                 </Grid>
-                <Grid xs={3}>
+                <Grid xs={12} md={3}>
                     <Woningvoorwaarden/>
                 </Grid>
             </Grid.Container>
