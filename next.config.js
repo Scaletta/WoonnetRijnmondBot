@@ -3,7 +3,7 @@ const withPWA = require('next-pwa')({
 });
 module.exports =
     withPWA({
-        basePath: process.env.BASEPATH + '/',
+        basePath: '/' + process.env.BASEPATH,
         publicRuntimeConfig: {
             modifiedDate: new Date().toISOString(),
             maxHuur: 800,
