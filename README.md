@@ -1,34 +1,29 @@
 # [Woonnet Rijnmond](https://www.woonnetrijnmond.nl/) Bot
-Automaticly check your estimated place for houses based on your preferences every hour with Github Actions.
+Automaticly check your estimated place for houses based on your preferences every hour with Github Actions and sent new houses to Pushover.
 <!-- TOC -->
 * [Woonnet Rijnmond Bot](#woonnet-rijnmond-bot)
-  * [Goals](#goals)
-  * [Todo](#todo)
+  * [Why build this](#why-build-this)
   * [How to use](#how-to-use)
   * [Dependencies](#dependencies)
   * [Disclaimer](#disclaimer)
 <!-- TOC -->
-## Goals
+## Why build this
 - To have no frustration checking the website and logging in (over and over), because it always logs you out...
 - To actually see your estimated place, without clicking every house that is available.
-- To check if a house it not a 55+ house or a bejaardenflat.
+- To filter out 55+ houses and bejaardenflats.
 - To view it with ease on my phone.
-
-## Todo
-- Make UI better
-- Check each house for keywords 55+, so it won't display at all.
-- Automated push notifications based on the `config.minReageerPositie`.
-- Clickable link for house.
-- Detailed page of house.
-- Better description.
+- To check all houses on a map.
+- To get push notifications when there are new houses available to me.
+- Using this as a PWA app, because its offline(cached) data anyway.
 
 ## How to use
 1. `Fork this repo`.
-2. Add the repository secrets: `WOONNET_USERNAME`, `WOONNET_PASSWORD`, `INCLUDE55PLUS`, `PUSHOVERAPPKEY` & `PUSHOVERUSERKEY` with your own credentials of Woonnet Rijnmond.
+2. Add the repository secrets: `WOONNET_USERNAME`, `WOONNET_PASSWORD`, `INCLUDE55PLUS` = true or false, `PUSHOVERAPPKEY` & `PUSHOVERUSERKEY` with your own credentials.
 3. Add the repository variable: `GITHUBPAGEURL` according to your GitHub Page URL.
 4. **Enable Github Pages** at Settings and select **GitHub Actions** as Source
 5. Run your first action.
 6. Your data will be fetched and will be published to your Github Page.
+7. Every hour, Github actions will fetch data from Woonnet Rijnmond and compare it to the old date. When there is new data found, you will receive a notifcation trough Pushover.
 
 ## Dependencies
 - [React](https://github.com/facebook/react)
@@ -40,5 +35,10 @@ Automaticly check your estimated place for houses based on your preferences ever
 - [React Leaflet](https://react-leaflet.js.org/)
 - [Leaflet](https://leafletjs.com/)
 - [React-PDF](https://react-pdf.org/)
+- [Pushover](https://pushover.net/)
+- [pushover-notifications](https://github.com/qbit/node-pushover)
+- [react-iframe](https://github.com/robbestad/react-iframe)
+- [Next-PWA](https://github.com/shadowwalker/next-pwa)
+
 ## Disclaimer
-This repo is not affiliated in any way with Woonnet Rijnmond
+This repo is not affiliated in any way with Woonnet Rijnmond. It is just made out of frustration by the woningnood.
