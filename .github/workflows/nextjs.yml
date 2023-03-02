@@ -86,11 +86,11 @@ jobs:
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
         env:
-          BASEPATH: ${{ vars.GITHUBPAGEURL }}
+          BASEPATH: ${{ github.repository_owner }}
       - name: Static HTML export with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next export
         env:
-          BASEPATH: ${{ vars.GITHUBPAGEURL }}
+          BASEPATH: ${{ github.repository_owner }}
       - name: Create data directory
         run: mkdir -p ./out/data/
       - name: Copy Woonnet Rijnmond Data
