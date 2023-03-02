@@ -122,8 +122,8 @@ export const Woning = ({woning}) => {
                             <Row>
                                 <Col>
                                     <Text>Verdeelmodel:</Text>
-                                    <Text>Reacties:</Text>
                                     <Text>Reageerpositie:</Text>
+                                    <Text>Reacties:</Text>
                                     <Text>Beschikbaar:</Text>
                                 </Col>
                             </Row>
