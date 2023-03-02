@@ -1,6 +1,9 @@
 const withPWA = require('next-pwa')({
     dest: 'public',
     register: true,
+    modifyURLPrefix: {
+        '_offline': process.env.BASEPATH ? '/' + process.env.BASEPATH.split('/').pop() + '_offline' : '_offline',
+    },
     cacheOnFrontEndNav: true,
     scope: process.env.BASEPATH ? '/' + process.env.BASEPATH.split('/').pop() : '',
 });
