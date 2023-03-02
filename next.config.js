@@ -1,9 +1,12 @@
 const withPWA = require('next-pwa')({
     dest: 'public',
+    register: true,
+    cacheOnFrontEndNav: true,
+    scope: process.env.BASEPATH ? '/' + process.env.BASEPATH.split('/').pop() : '',
 });
 module.exports =
     withPWA({
-        basePath: '/' + process.env.BASEPATH.split('/').pop(),
+        basePath: process.env.BASEPATH ? '/' + process.env.BASEPATH.split('/').pop() : '',
         trailingSlash: true,
         publicRuntimeConfig: {
             modifiedDate: new Date().toISOString(),
